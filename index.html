@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Universo Nyna</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{--am:#f8be3e;--li:#bc99cf;--az:#8fcbcf;--ro:#ffa4a4;--bg:#fdf6ff;--card:#fff;--txt:#333;--sub:#777;--brd:#eee;--red:#e74c3c;--grn:#27ae60;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:70px;}
+/* TOP BAR */
+.topbar{background:linear-gradient(135deg,#fff 0%,#fef0ff 100%);border-bottom:2px solid var(--brd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.logo{font-family:'Playfair Display',serif;font-size:20px;background:linear-gradient(135deg,var(--li),var(--az));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.desk-nav{display:none;}
+@media(min-width:768px){
+  body{padding-bottom:0;}
+  .desk-nav{display:flex;gap:4px;}
+  .desk-nav button{background:none;border:none;padding:8px 14px;border-radius:20px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--sub);transition:all .2s;}
+  .desk-nav button.active,.desk-nav button:hover{background:var(--li);color:#fff;}
+  .bot-nav{display:none!important;}
+}
+/* BOTTOM NAV */
+.bot-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid var(--brd);display:flex;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.08);}
+.bot-nav button{flex:1;background:none;border:none;padding:8px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:10px;color:var(--sub);font-weight:600;transition:color .2s;touch-action:manipulation;}
+.bot-nav button.active{color:var(--li);}
+.bot-nav button .ico{font-size:20px;}
+/* VIEWS */
+.view{display:none;padding:16px;max-width:1200px;margin:0 auto;}
+.view.active{display:block;}
+/* CARDS */
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:12px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+/* METRICS */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.metric{background:var(--card);border-radius:14px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.metric .val{font-size:20px;font-weight:800;color:var(--li);}
+.metric .lbl{font-size:11px;color:var(--sub);margin-top:2px;}
+/* SECTION TITLE */
+.sec-title{font-size:16px;font-weight:800;margin-bottom:10px;color:var(--txt);}
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-m{background:#e8f4ff;color:#2980b9;}
+.badge-f{background:#ffe8f5;color:#c0392b;}
+.badge-u{background:#e8ffe8;color:#27ae60;}
+.badge-status-ag{background:#fff3cd;color:#856404;}
+.badge-status-pg{background:#d1e7dd;color:#0f5132;}
+.badge-status-en{background:#cfe2ff;color:#084298;}
+.badge-status-ok{background:#d1e7dd;color:#0f5132;}
+.badge-status-ca{background:#f8d7da;color:#842029;}
+/* ESTOQUE CARD */
+.prod-card{background:var(--card);border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:8px;}
+.prod-emoji{font-size:36px;text-align:center;}
+.prod-foto{width:100%;height:100px;object-fit:cover;border-radius:10px;}
+.prod-nome{font-size:13px;font-weight:700;line-height:1.3;}
+.tam-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.tam-tag{padding:2px 6px;border-radius:8px;font-size:11px;font-weight:700;}
+.tam-ok{background:#d1e7dd;color:#0a3622;}
+.tam-low{background:#fff3cd;color:#664d03;}
+.tam-zero{background:#f0f0f0;color:#999;}
+.prod-price{font-size:12px;color:var(--sub);}
+.prod-price strong{color:var(--grn);}
+.prod-actions{display:flex;gap:6px;margin-top:4px;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;transition:all .2s;touch-action:manipulation;gap:6px;}
+.btn-primary{background:var(--li);color:#fff;}
+.btn-primary:hover{background:#a885b8;}
+.btn-success{background:var(--grn);color:#fff;}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-outline{background:transparent;border:2px solid var(--brd);color:var(--sub);}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:10px;}
+.btn-xs{padding:4px 8px;font-size:11px;border-radius:8px;}
+.btn-am{background:var(--am);color:#333;}
+.btn-az{background:var(--az);color:#333;}
+.btn-ro{background:var(--ro);color:#333;}
+.btn-full{width:100%;}
+/* INPUTS */
+.inp{width:100%;padding:10px 14px;border:2px solid var(--brd);border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:border .2s;background:#fff;}
+.inp:focus{border-color:var(--li);}
+.lbl{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:4px;display:block;}
+.form-group{margin-bottom:14px;}
+/* FILTERS */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.filter-btn{padding:6px 14px;border-radius:20px;border:2px solid var(--brd);background:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;touch-action:manipulation;transition:all .2s;}
+.filter-btn.active{border-color:var(--li);background:var(--li);color:#fff;}
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;}
+.modal-overlay.open{display:flex;}
+@media(min-width:768px){.modal-overlay{align-items:center;justify-content:center;}}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;}
+@media(min-width:768px){.modal{border-radius:20px;max-width:560px;max-height:85vh;animation:none;}}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.modal-title{font-size:18px;font-weight:800;}
+.modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--sub);padding:4px;touch-action:manipulation;}
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--brd);margin-bottom:16px;}
+.tab{padding:8px 16px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-2px;touch-action:manipulation;}
+.tab.active{color:var(--li);border-bottom-color:var(--li);}
+/* PROGRESS */
+.progress-bar{background:var(--brd);border-radius:10px;height:8px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:10px;transition:width .4s;}
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl th{background:#f5f5f5;padding:8px;text-align:left;font-weight:700;}
+.tbl td{padding:8px;border-bottom:1px solid var(--brd);}
+/* ALERT */
+.alert{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:10px;}
+.alert-info{background:#e8f4ff;color:#084298;}
+.alert-warn{background:#fff3cd;color:#664d03;}
+.alert-err{background:#f8d7da;color:#842029;}
+.alert-ok{background:#d1e7dd;color:#0a3622;}
+/* PEDIDO CARD */
+.ped-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.ped-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+/* CLI CARD */
+.cli-card{background:var(--card);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:10px;}
+.cli-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;}
+/* PICKER GRID */
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pick-item{border:2px solid var(--brd);border-radius:12px;padding:10px;cursor:pointer;touch-action:manipulation;transition:all .2s;text-align:center;}
+.pick-item:hover,.pick-item.sel{border-color:var(--li);background:#f5eeff;}
+.pick-item .pe{font-size:28px;}
+.pick-item .pn{font-size:12px;font-weight:700;margin-top:4px;}
+/* PAGINATION */
+.pagination{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.page-btn{padding:8px 14px;border-radius:10px;border:2px solid var(--brd);background:#fff;cursor:pointer;font-weight:700;font-size:13px;touch-action:manipulation;}
+.page-btn.active{background:var(--li);color:#fff;border-color:var(--li);}
+/* STATUS STEPS */
+.steps{display:flex;justify-content:space-between;margin-bottom:16px;position:relative;}
+.steps::before{content:"";position:absolute;top:20px;left:10%;right:10%;height:2px;background:var(--brd);z-index:0;}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative;z-index:1;}
+.step-dot{width:16px;height:16px;border-radius:50%;background:var(--brd);border:2px solid #fff;box-shadow:0 0 0 2px var(--brd);}
+.step.done .step-dot{background:var(--grn);box-shadow:0 0 0 2px var(--grn);}
+.step.active .step-dot{background:var(--li);box-shadow:0 0 0 2px var(--li);}
+.step-lbl{font-size:10px;font-weight:700;color:var(--sub);text-align:center;}
+.step.done .step-lbl,.step.active .step-lbl{color:var(--txt);}
+/* COLECOES */
+.col-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--sub);}
+.empty .ei{font-size:48px;}
+/* FLOATING BTN */
+.fab{position:fixed;bottom:80px;right:16px;width:56px;height:56px;border-radius:50%;background:var(--li);color:#fff;border:none;font-size:28px;cursor:pointer;box-shadow:0 4px 16px rgba(188,153,207,.5);z-index:50;touch-action:manipulation;display:flex;align-items:center;justify-content:center;}
+@media(min-width:768px){.fab{bottom:20px;}}
+.row{display:flex;gap:8px;}
+.col{flex:1;}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#fdf6ff 0%,#f0e8ff 100%);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px;}
+.login-box{background:#fff;border-radius:24px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(188,153,207,.2);}
+.login-logo{font-family:'Playfair Display',serif;font-size:28px;background:linear-gradient(135deg,var(--li),var(--az));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:8px;}
+.login-sub{text-align:center;color:var(--sub);font-size:13px;margin-bottom:24px;}
+.login-err{background:#f8d7da;color:#842029;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:12px;display:none;}
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;z-index:500;display:none;}
+.spinner{width:40px;height:40px;border:4px solid var(--brd);border-top-color:var(--li);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.sync-badge{font-size:11px;color:var(--sub);display:flex;align-items:center;gap:4px;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--grn);}
+.sync-dot.syncing{background:var(--am);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Universo Nyna</div>
+    <div class="login-sub">Acesso restrito &mdash; faça login para continuar</div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="form-group">
+      <label class="lbl">E-mail</label>
+      <input class="inp" type="email" id="loginEmail" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label class="lbl">Senha</label>
+      <input class="inp" type="password" id="loginSenha" placeholder="sua senha">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="fazerLogin()" id="loginBtn">Entrar</button>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<div id="appContent" style="display:none;">
+<div class="topbar">
+  <div class="logo">Universo Nyna</div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="sync-badge"><div class="sync-dot" id="syncDot"></div><span id="syncTxt">ok</span></div>
+    <button class="btn btn-outline btn-xs" onclick="fazerLogout()">Sair</button>
+  </div>
+  <nav class="desk-nav" id="deskNav"></nav>
+</div>
+
+<!-- VIEWS -->
+<div id="v-dash" class="view active">
+  <div class="metrics" id="dashMetrics"></div>
+  <div id="dashUltVendas"></div>
+  <div id="dashPedidos"></div>
+  <div id="dashAlertas"></div>
+</div>
+
+<div id="v-est" class="view">
+  <div class="row" style="margin-bottom:10px;gap:8px;">
+    <input class="inp" id="buscaEst" type="text" placeholder="Buscar produto..." oninput="renderEst()">
+  </div>
+  <div class="filters" id="filtGenero"></div>
+  <div class="filters" id="filtCat"></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;">
+    <button class="btn btn-primary btn-sm" onclick="abrirModalProd(0)">+ Novo</button>
+    <button class="btn btn-outline btn-sm" onclick="exportarDados()">Exportar</button>
+    <label class="btn btn-outline btn-sm" style="cursor:pointer;">Importar<input type="file" accept=".json" style="display:none;" onchange="importarDados(event)"></label>
+  </div>
+  <div id="estGrid"></div>
+  <div class="pagination" id="estPag"></div>
+</div>
+
+<div id="v-vnd" class="view">
+  <div class="tabs">
+    <button class="tab active" onclick="showVndTab('nova')">Nova Venda</button>
+    <button class="tab" onclick="showVndTab('hist')">Histórico</button>
+  </div>
+  <div id="vnd-nova">
+    <div class="card" style="margin-bottom:12px;">
+      <div class="sec-title">1. Cliente</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button class="btn btn-outline btn-sm" onclick="abrirSelCli()">Selecionar Cliente</button>
+        <button class="btn btn-outline btn-sm" onclick="abrirModalCli(0)">Nova Cliente</button>
+      </div>
+      <div id="vndCliSel" class="alert alert-info" style="display:none;"></div>
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="sec-title">2. Produtos</div>
+      <button class="btn btn-primary btn-sm" onclick="abrirPickProd()" style="margin-bottom:10px;">+ Adicionar Produto</button>
+      <div id="vndItens"></div>
+      <div id="vndTotal" style="font-size:18px;font-weight:800;text-align:right;margin-top:8px;display:none;"></div>
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="sec-title">3. Desconto e Entrega</div>
+      <div class="row">
+        <div class="col form-group">
+          <label class="lbl">Desconto</label>
+          <div class="row" style="gap:4px;">
+            <input class="inp" type="number" id="vndDesconto" value="0" min="0" step="0.01" oninput="renderVndItens()" style="flex:2;">
+            <select class="inp" id="vndDescontoTipo" onchange="renderVndItens()" style="flex:1;padding:10px 6px;">
+              <option value="R">R$</option>
+              <option value="%">%</option>
+            </select>
+          </div>
+        </div>
+        <div class="col form-group">
+          <label class="lbl">Frete cobrado da cliente</label>
+          <input class="inp" type="number" id="vndFrete" value="0" min="0" step="0.01" oninput="renderVndItens()">
+        </div>
+      </div>
+      <div id="vndResumo" style="display:none;font-size:13px;color:var(--sub);"></div>
+    </div>
+    <button class="btn btn-success btn-full" onclick="confirmarVenda()" style="margin-top:8px;">Confirmar Venda</button>
+  </div>
+  <div id="vnd-hist" style="display:none;">
+    <div id="histVendas"></div>
+  </div>
+</div>
+
+<div id="v-ped" class="view">
+  <div class="filters" id="filtPedStatus"></div>
+  <div id="pedLista"></div>
+</div>
+
+<div id="v-cli" class="view">
+  <input class="inp" id="buscaCli" type="text" placeholder="Buscar cliente..." oninput="renderCli()" style="margin-bottom:12px;">
+  <div id="cliGrid"></div>
+</div>
+
+<div id="v-col" class="view">
+  <div class="metrics" id="colMetrics"></div>
+  <div id="colCards"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bot-nav" id="botNav"></nav>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="fabClick()" title="Novo">+</button>
+</div><!-- end appContent -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="m-prod">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="mProdTitle">Produto</div>
+      <button class="modal-close" onclick="fecharModal('m-prod')">&times;</button>
+    </div>
+    <div id="mProdForm"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-pick">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Selecionar Produto</div>
+      <button class="modal-close" onclick="fecharModal('m-pick')">&times;</button>
+    </div>
+    <input class="inp" id="pickBusca" type="text" placeholder="Buscar..." oninput="renderPick()" style="margin-bottom:10px;">
+    <div class="filters" id="pickFiltCat"></div>
+    <div id="pickGrid"></div>
+    <div id="pickConfig" style="display:none;margin-top:12px;" class="card">
+      <div class="form-group">
+        <label class="lbl">Tamanho</label>
+        <select class="inp" id="pickTam"></select>
+      </div>
+      <div class="form-group">
+        <label class="lbl">Quantidade</label>
+        <input class="inp" type="number" id="pickQtd" value="1" min="1">
+      </div>
+      <button class="btn btn-success btn-full" onclick="addItemVenda()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-ped">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="mPedTitle">Pedido</div>
+      <button class="modal-close" onclick="fecharModal('m-ped')">&times;</button>
+    </div>
+    <div id="mPedBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-cli">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="mCliTitle">Cliente</div>
+      <button class="modal-close" onclick="fecharModal('m-cli')">&times;</button>
+    </div>
+    <div id="mCliForm"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-cli-det">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="mCliDetTitle">Histórico</div>
+      <button class="modal-close" onclick="fecharModal('m-cli-det')">&times;</button>
+    </div>
+    <div id="mCliDetBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-cli-sel">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Selecionar Cliente</div>
+      <button class="modal-close" onclick="fecharModal('m-cli-sel')">&times;</button>
+    </div>
+    <input class="inp" id="selCliBusca" type="text" placeholder="Buscar..." oninput="renderSelCli()" style="margin-bottom:10px;">
+    <div id="selCliLista"></div>
+  </div>
+</div>
+
+<!-- FIREBASE SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+// ============ FIREBASE CONFIG ============
+var firebaseConfig = {
+  apiKey: "AIzaSyAX4jtB7KAgfRm3MQcWTk7Y9KgGuiF7zwg",
+  authDomain: "universo-nyna.firebaseapp.com",
+  projectId: "universo-nyna",
+  storageBucket: "universo-nyna.firebasestorage.app",
+  messagingSenderId: "650799554138",
+  appId: "1:650799554138:web:440e78fd5fe83ffb8a4263"
+};
+firebase.initializeApp(firebaseConfig);
+var auth = firebase.auth();
+var firestore = firebase.firestore();
+
+// ============ PRODUTOS PADRAO ============
+var PRODUTOS_PADRAO = [{"id": 1, "nome": "Conjunto Po\u00e1 Body Fru-Fru e Balon\u00ea", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 2, "nome": "Conjunto body frufru, short e la\u00e7o flores rosa", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 3, "nome": "Conjunto body frufru, short e la\u00e7o vermelho", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 4, "nome": "Conjunto body frufru, short e la\u00e7o azul marinho", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 5, "nome": "Conjunto body frufru, short e la\u00e7o lil\u00e1s", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 6, "nome": "Conjunto body frufru, short e la\u00e7o rosa", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 7, "nome": "Conjunto body frufru, short e la\u00e7o borboletas", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 8, "nome": "Conjunto body frufru, short e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 9, "nome": "Conjunto body frufru, short e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 10, "nome": "Conjunto body, short e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 25.9, "frete": 2.0, "precoCusto": 27.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 11, "nome": "Conjunto body frufru, saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 12, "nome": "Conjunto body azul e saia jeans", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 13, "nome": "Conjunto body laranja  e saia jeans", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 80.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 14, "nome": "Conjunto body verde e saia jeans", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 80.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 15, "nome": "Conjunto body lil\u00e1s e saia listrada colorida", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 16, "nome": "Conjunto body e saia preta", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 35.8, "frete": 2.0, "precoCusto": 37.8, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 17, "nome": "Conjunto body e bloomer", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 25.0, "frete": 2.0, "precoCusto": 27.0, "valorVenda": 64.0, "tamanhos": {"P": 0, "M": 0, "G": 2, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 18, "nome": "Conjunto colors body e short  lil\u00e1s", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.0, "frete": 2.0, "precoCusto": 31.0, "valorVenda": 64.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 19, "nome": "Romper bolso - rosa", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 21.9, "frete": 2.0, "precoCusto": 23.9, "valorVenda": 59.0, "tamanhos": {"P": 0, "M": 0, "G": 2, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 20, "nome": "Romper bolso - preto", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 21.9, "frete": 2.0, "precoCusto": 23.9, "valorVenda": 59.0, "tamanhos": {"P": 0, "M": 0, "G": 2, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 21, "nome": "Conjunto Alice - body e short e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 64.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 22, "nome": "Conjunto body em cotton e short canelado", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 23, "nome": "Conjunto over - blusa e short canelado", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 24, "nome": "Conjunto over - blusa e short c canelado", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 25, "nome": "Conjunto Maria - body e short  canelado", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 26, "nome": "Conjunto Maria - body e short  canelado", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 27, "nome": "Conjunto Maria - body e short  canelado", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 28, "nome": "Conjunto canelado - ROSA NEON", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 29, "nome": "Conjunto canelado -ROXO", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 30, "nome": "Conjunto oncinha rosa", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 31, "nome": "Conjunto body rosa e short listras", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 2, "4": 0}, "foto": ""}, {"id": 32, "nome": "Conjunto body poa - off", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 2, "3": 2, "4": 0}, "foto": ""}, {"id": 33, "nome": "Conjunto body poa - preto", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 2, "3": 1, "4": 0}, "foto": ""}, {"id": 34, "nome": "Vestido em cotton", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 3, "3": 0, "4": 0}, "foto": ""}, {"id": 35, "nome": "Conjunto po\u00e1 -  fundo preto", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 79.0, "tamanhos": {"P": 1, "M": 1, "G": 2, "1": 1, "2": 2, "3": 2, "4": 0}, "foto": ""}, {"id": 36, "nome": "Conjunto po\u00e1 -  fundo branco", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 37, "nome": "Conjunto Minnie e Mickey - bermuda verde", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 2, "3": 1, "4": 0}, "foto": ""}, {"id": 38, "nome": "Conjunto Margarida - bermuda rosa", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 39, "nome": "Conjunto Minnie - amarelo", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 40, "nome": "Conjunto body, short saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 41, "nome": "Conjunto camiseta, short saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 1}, "foto": ""}, {"id": 42, "nome": "Conjunto body, short saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 43, "nome": "Conjunto camiseta, short saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 1}, "foto": ""}, {"id": 44, "nome": "Conjunto body, short saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 2, "4": 0}, "foto": ""}, {"id": 45, "nome": "Conjunto vestido, calcinha e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 46, "nome": "Vestido verde \u00e1gua", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 47, "nome": "Vestido off white", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 48, "nome": "Conjunto vestido, calcinha e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 49, "nome": "Conjunto body, saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 50, "nome": "Conjunto body, saia e la\u00e7o", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 51, "nome": "Salopete Babado Camel", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.0, "frete": 2.0, "precoCusto": 36.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 52, "nome": "Conjunto body e suspens\u00f3rio", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 53, "nome": "Conjunto body e jardineira", "genero": "Menina", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 59.0, "frete": 2.0, "precoCusto": 61.0, "valorVenda": 110.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 54, "nome": "Conjunto jardineira em moletinho e body canelado", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 55, "nome": "Conjunto blusa em cotton e short em molecotton", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 56, "nome": "Romper arco-\u00edris em tecido waffle", "genero": "Unissex", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 28.0, "frete": 2.0, "precoCusto": 30.0, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 57, "nome": "Conjunto body polo e short - xadrez", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 0, "G": 1, "1": 0, "2": 2, "3": 1, "4": 0}, "foto": ""}, {"id": 58, "nome": "Conjunto body bot\u00f5es e short", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 59, "nome": "Conjunto body, short e bandana - grade", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 60, "nome": "Conjunto body polo e short em molecotton", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 1, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 61, "nome": "Conjunto body polo e short - foguete azul", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 62, "nome": "Conjunto body, short e bandana - dino verde", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 63, "nome": "Conjunto body, short e bandana", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 64, "nome": "Conjunto colors - cinza e preto", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 65, "nome": "Conjunto colors - verde", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 66, "nome": "Romper polo", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 28.9, "frete": 2.0, "precoCusto": 30.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 67, "nome": "Conjunto body, short e bandana - xadrez azul", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 1, "G": 0, "1": 0, "2": 2, "3": 1, "4": 0}, "foto": ""}, {"id": 68, "nome": "Conjunto body, short e bandana - urso cinza", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 2, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 69, "nome": "Conjunto body, short e bandana - dino branco", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 1, "M": 1, "G": 0, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 70, "nome": "Conjunto body, short e bandana - quadriculado", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 71, "nome": "Conjunto body, short e bandana", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 72, "nome": "Conjunto romper e bandana - foguete azul", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 73, "nome": "Conjunto body MC", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 79.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 74, "nome": "Conjunto body MC", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 75, "nome": "Conjunto le\u00e3zinho", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 76, "nome": "Conjunto urso", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 77, "nome": "Conjunto cactos - azul marinho", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 34.9, "frete": 2.0, "precoCusto": 36.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 78, "nome": "Conjunto canelado", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 79, "nome": "Conjunto blusa e short", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 80, "nome": "Conjunto blusa e short", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 81, "nome": "Conjunto blusa e short", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 82, "nome": "Conjunto mickey e pluto - bermuda verde", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 1}, "foto": ""}, {"id": 83, "nome": "Conjunto body canelado", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 84, "nome": "Conjunto Mickey", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 85, "nome": "Mickey e pluto", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 42.0, "frete": 2.0, "precoCusto": 44.0, "valorVenda": 84.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 86, "nome": "Conjunto malha waffle", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 35.0, "frete": 2.0, "precoCusto": 37.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 87, "nome": "Jardineira", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 35.0, "frete": 2.0, "precoCusto": 37.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 88, "nome": "Conjunto body, short e bandana cotton", "genero": "Menino", "categoria": "Ver\u00e3o", "emoji": "\u2600\ufe0f", "custo": 35.9, "frete": 2.0, "precoCusto": 37.9, "valorVenda": 74.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 89, "nome": "Conjunto body frufru longo e cal\u00e7a molecotom - Lil\u00e1s", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 90, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - Raposa vermelha", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 91, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - Cal\u00e7a floral rosa", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 92, "nome": "Conjunto body longo, cal\u00e7a e la\u00e7o - CORA\u00c7\u00c3O", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 93, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - CAL\u00c7A CORA\u00c7\u00c3O", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 94, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - FLORZINHA", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 2, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 95, "nome": "Conjunto body  longo, cal\u00e7a e la\u00e7o - PINGOS", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 96, "nome": "Conjunto body  longo, cal\u00e7a e la\u00e7o - ABACAXI", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 97, "nome": "Conjunto body  longo, cal\u00e7a e la\u00e7o - SOLZINHO", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 98, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - URSINHA", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 36.0, "frete": 2.0, "precoCusto": 38.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 99, "nome": "Conjunto canelado body frufru e cal\u00e7a - Verde", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.0, "frete": 2.0, "precoCusto": 41.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 100, "nome": "Conjunto cardigan e cal\u00e7a - flores", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 36.9, "frete": 2.0, "precoCusto": 38.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 101, "nome": "Macac\u00e3o e la\u00e7o - cora\u00e7\u00e3o", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 102, "nome": "Macac\u00e3o e la\u00e7o - cora\u00e7\u00e3o azul marinho", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 103, "nome": "Macac\u00e3o e la\u00e7o - Rosa gliter", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 104, "nome": "Conjunto urso rosa", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 105, "nome": "Conjunto body curto, cal\u00e7a e la\u00e7o", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 106, "nome": "Conjunto body curto, cal\u00e7a e la\u00e7o", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 66.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 107, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - Listras", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 76.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 1}, "foto": ""}, {"id": 108, "nome": "Conjunto body frufru longo, cal\u00e7a e la\u00e7o - Po\u00e1 colorido", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 2, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 109, "nome": "Salopete  cora\u00e7\u00e3o - ROSA", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 60.0, "frete": 2.0, "precoCusto": 62.0, "valorVenda": 120.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 110, "nome": "Conjunto jardineira urso", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.0, "frete": 2.0, "precoCusto": 41.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 111, "nome": "Vestido Minnie - la\u00e7o rosa", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 50.0, "frete": 2.0, "precoCusto": 52.0, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 3, "4": 0}, "foto": ""}, {"id": 112, "nome": "Conjunto cabelado rosa", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 30.0, "frete": 2.0, "precoCusto": 32.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 113, "nome": "Conjunto camiseta ML  e cal\u00e7a molecotom - Vinho", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 114, "nome": "Conjunto canelado nude", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 30.0, "frete": 2.0, "precoCusto": 32.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 115, "nome": "Conjunto body, cal\u00e7a e bandana - Planetas body preto", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 38.9, "frete": 2.0, "precoCusto": 40.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 116, "nome": "Conjunto body, cal\u00e7a e bandana - Cal\u00e7a preta t\u00eanis", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 38.9, "frete": 2.0, "precoCusto": 40.9, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 117, "nome": "Conjunto body, cal\u00e7a e bandana - raposa vermelho", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 38.9, "frete": 2.0, "precoCusto": 40.9, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 1, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 118, "nome": "Conjunto body, cal\u00e7a e bandana - formiga", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 38.9, "frete": 2.0, "precoCusto": 40.9, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 119, "nome": "Conjunto body, cal\u00e7a e bandana - dino", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 38.9, "frete": 2.0, "precoCusto": 40.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 120, "nome": "Conjunto body, cal\u00e7a e bandana - LE\u00c3O", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 36.0, "frete": 2.0, "precoCusto": 38.0, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 121, "nome": "Conjunto body, cal\u00e7a e bandana - CACHORRINHO", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 36.0, "frete": 2.0, "precoCusto": 38.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 122, "nome": "Conjunto body e cal\u00e7a  - BOLSA URSO", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 123, "nome": "Conjunto body, cal\u00e7a e bandana - DINO", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 124, "nome": "Conjunto body, cal\u00e7a e bandana - CACTOS", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 125, "nome": "Conjunto body polo e cal\u00e7a peluciada", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 126, "nome": "Conjunto body, cal\u00e7a e bandana - cachorrinho vermelho", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 127, "nome": "Macac\u00e3o com z\u00edper - Carros vermelho", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 29.9, "frete": 2.0, "precoCusto": 31.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 128, "nome": "Macac\u00e3o com z\u00edper - zebre azul", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 129, "nome": "Conjunto body polo e cal\u00e7a - Calca grade", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 69.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 130, "nome": "Conjunto jardineira dino", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 40.0, "frete": 2.0, "precoCusto": 42.0, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 131, "nome": "Conjunto colors - lil\u00e1s", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 132, "nome": "Conjunto colors - nude", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 133, "nome": "Body de gola 100% algod\u00e3o - nude ouro", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 1, "M": 1, "G": 2, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 134, "nome": "Body de gola 100% algod\u00e3o - marrom", "genero": "Menina", "categoria": "Meia Esta\u00e7\u00e3o", "emoji": "\ud83c\udf42", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 135, "nome": "Casaco soft  - lil\u00e1s", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 29.76, "frete": 2.0, "precoCusto": 31.76, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 136, "nome": "Casaco soft  - preto e branco", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 29.76, "frete": 2.0, "precoCusto": 31.76, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 137, "nome": "Casaco moletom gola com pelos - Preto", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 35.0, "frete": 2.0, "precoCusto": 37.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 138, "nome": "Jaqueta corta vento Mickey", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 32.0, "frete": 2.0, "precoCusto": 34.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 139, "nome": "Jaqueta Puufer sem touca", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 62.0, "frete": 2.0, "precoCusto": 64.0, "valorVenda": 120.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 140, "nome": "Cacharrel - preta", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 15.0, "frete": 2.0, "precoCusto": 17.0, "valorVenda": 39.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 141, "nome": "Cacharrel - ros\u00e9", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 15.0, "frete": 2.0, "precoCusto": 17.0, "valorVenda": 39.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 142, "nome": "Legging cirr\u00ea peluciada", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 23.0, "frete": 2.0, "precoCusto": 25.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 143, "nome": "Legging montaria t\u00e9rmica pettenati", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 23.6, "frete": 2.0, "precoCusto": 25.6, "valorVenda": 0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 144, "nome": "Legging cirr\u00ea", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 24.0, "frete": 2.0, "precoCusto": 26.0, "valorVenda": 0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 145, "nome": "Macac\u00e3o soft - Po\u00e1 preto", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 146, "nome": "Macac\u00e3o de soft - Floresta", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 147, "nome": "Macac\u00e3o fleece - Verde \u00e1gua", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 94.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 148, "nome": "Macac\u00e3o fleece - Azul", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 94.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 149, "nome": "Conjunto moletom - Rosa", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 96.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 150, "nome": "Conjunto moletom - Royal", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 96.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 151, "nome": "Conjunto floquinho - verde", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 52.0, "frete": 2.0, "precoCusto": 54.0, "valorVenda": 110.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 152, "nome": "Conjunto moletom - ARCO IRIS", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 60.0, "frete": 2.0, "precoCusto": 62.0, "valorVenda": 129.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 1}, "foto": ""}, {"id": 153, "nome": "Conjunto moletom - FLOWER", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 60.0, "frete": 2.0, "precoCusto": 62.0, "valorVenda": 129.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 154, "nome": "Conjunto xadrez - Preto", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 92.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 155, "nome": "Conjunto fleece - Astronauta", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 96.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 156, "nome": "Conjunto fleece - Estrela", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 96.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 157, "nome": "Conjunto fleece - Po\u00e1 colorido - rosa", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 44.0, "frete": 2.0, "precoCusto": 46.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 158, "nome": "Conjunto fleece cora\u00e7\u00e3o hologr\u00e1ico - ROSA", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 49.0, "frete": 2.0, "precoCusto": 51.0, "valorVenda": 120.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 1}, "foto": ""}, {"id": 159, "nome": "Conjunto fleece cora\u00e7\u00e3o hologr\u00e1ico - LIL\u00c1S", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 49.0, "frete": 2.0, "precoCusto": 51.0, "valorVenda": 120.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 160, "nome": "Conjunto fleece - Cora\u00e7\u00e3o PINK", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 57.0, "frete": 2.0, "precoCusto": 59.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 1}, "foto": ""}, {"id": 161, "nome": "Conjunto fleece - LOVE", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 57.0, "frete": 2.0, "precoCusto": 59.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 162, "nome": "Conjunto fleece - CARROS", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 57.0, "frete": 2.0, "precoCusto": 59.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 163, "nome": "Conjunto fleece - Verde Escuro Helic\u00f3ptero", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 57.0, "frete": 2.0, "precoCusto": 59.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 164, "nome": "Conjunto moletom ursinho - marrom", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 47.0, "frete": 2.0, "precoCusto": 49.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 165, "nome": "Conjunto Mickey - cinza claro", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 47.0, "frete": 2.0, "precoCusto": 49.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 2, "3": 0, "4": 0}, "foto": ""}, {"id": 166, "nome": "Conjunto moletom teddy", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 47.0, "frete": 2.0, "precoCusto": 49.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 167, "nome": "Conjunto Brooklyn", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 43.0, "frete": 2.0, "precoCusto": 45.0, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 168, "nome": "Conjunto Converse", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 30.0, "frete": 2.0, "precoCusto": 32.0, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 169, "nome": "Comjunto moletom - Azul Royal urso", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 60.0, "frete": 2.0, "precoCusto": 62.0, "valorVenda": 129.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 170, "nome": "Conjunto soft body + cal\u00e7a - caramelo", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 48.9, "frete": 2.0, "precoCusto": 50.9, "valorVenda": 99.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 171, "nome": "Body de moletom peluciado - preto", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 24.99, "frete": 2.0, "precoCusto": 26.99, "valorVenda": 55.0, "tamanhos": {"P": 1, "M": 0, "G": 2, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 172, "nome": "Body de moletom peluciado - nude claro", "genero": "Menina", "categoria": "Inverno", "emoji": "\ud83e\udde5", "custo": 24.99, "frete": 2.0, "precoCusto": 26.99, "valorVenda": 55.0, "tamanhos": {"P": 0, "M": 0, "G": 2, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 173, "nome": "Conjunto t\u00e9rmico - azul claro", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 29.0, "frete": 2.0, "precoCusto": 31.0, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 174, "nome": "Conjunto t\u00e9rmico com blusa - branco", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 32.0, "frete": 2.0, "precoCusto": 34.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 3, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 175, "nome": "Conjunto t\u00e9rmico com blusa - cinza", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 32.0, "frete": 2.0, "precoCusto": 34.0, "valorVenda": 79.0, "tamanhos": {"P": 1, "M": 1, "G": 2, "1": 0, "2": 1, "3": 2, "4": 0}, "foto": ""}, {"id": 176, "nome": "Conjunto t\u00e9rmico com blusa - preto", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 32.0, "frete": 2.0, "precoCusto": 34.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 1, "4": 0}, "foto": ""}, {"id": 177, "nome": "Conjunto t\u00e9rmico com blusa - azul marinho", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 32.0, "frete": 2.0, "precoCusto": 34.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 178, "nome": "Conjunto t\u00e9rmico com blusa - rosa", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 32.0, "frete": 2.0, "precoCusto": 34.0, "valorVenda": 79.0, "tamanhos": {"P": 1, "M": 0, "G": 2, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 179, "nome": "Conjunto t\u00e9rmico com blusa - ROSA URSINHA", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 39.0, "frete": 2.0, "precoCusto": 41.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 1, "3": 1, "4": 1}, "foto": ""}, {"id": 180, "nome": "Conjunto t\u00e9rmico com blusa - rosa", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 39.0, "frete": 2.0, "precoCusto": 41.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 1, "4": 1}, "foto": ""}, {"id": 181, "nome": "Camiseta t\u00e9rmica - azul marinho", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 14.9, "frete": 2.0, "precoCusto": 16.9, "valorVenda": 29.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 182, "nome": "Conjunto t\u00e9rmico lil\u00e1s", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 34.0, "frete": 2.0, "precoCusto": 36.0, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 183, "nome": "Conjunto t\u00e9rmico estampado", "genero": "Unissex", "categoria": "T\u00e9rmicos", "emoji": "\ud83c\udf21\ufe0f", "custo": 34.0, "frete": 2.0, "precoCusto": 36.0, "valorVenda": 79.0, "tamanhos": {"P": 1, "M": 1, "G": 0, "1": 2, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 184, "nome": "Body polo em cotton", "genero": "Menino", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 45.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 2, "2": 2, "3": 2, "4": 0}, "foto": ""}, {"id": 185, "nome": "Body em cotton bot\u00f5es", "genero": "Menino", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 1, "4": 0}, "foto": ""}, {"id": 186, "nome": "Body em cotton", "genero": "Menino", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "1": 1, "2": 1, "3": 1, "4": 1}, "foto": ""}, {"id": 187, "nome": "Body frufru", "genero": "Menina", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 188, "nome": "Body frufru", "genero": "Menina", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 1, "3": 0, "4": 0}, "foto": ""}, {"id": 189, "nome": "Saia linho preta", "genero": "Menina", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 39.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 190, "nome": "Saia linho ros\u00e9", "genero": "Menina", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 19.9, "frete": 2.0, "precoCusto": 21.9, "valorVenda": 45.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 191, "nome": "Salopete ros\u00e9", "genero": "Menina", "categoria": "Avulsos", "emoji": "\ud83c\udff7\ufe0f", "custo": 32.9, "frete": 2.0, "precoCusto": 34.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 1, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 192, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - melancia", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 110.0, "tamanhos": {"P": 1, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 193, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - arco-iris", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 110.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 194, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - sol", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 110.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 195, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - moranguinho", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 44.9, "frete": 2.0, "precoCusto": 46.9, "valorVenda": 110.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 196, "nome": "Conjunto camiseta, calcinha e chap\u00e9u -  flor neon", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 44.9, "frete": 2.0, "precoCusto": 46.9, "valorVenda": 110.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 197, "nome": "Conjunto camiseta, calcinha e chap\u00e9u -  frutinhas", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 44.9, "frete": 2.0, "precoCusto": 46.9, "valorVenda": 110.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 198, "nome": "Conjunto arco iris roxo", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 34.6, "frete": 2.0, "precoCusto": 36.6, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 199, "nome": "Conjunto biquini e sa\u00edda de praia", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 49.9, "frete": 2.0, "precoCusto": 51.9, "valorVenda": 140.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 200, "nome": "Biquini amarelo", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 201, "nome": "Biquini candy", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 202, "nome": "Mai\u00f4 listras candy", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 25.9, "frete": 2.0, "precoCusto": 27.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 203, "nome": "Mai\u00f4 solm lil\u00e1s", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 25.9, "frete": 2.0, "precoCusto": 27.9, "valorVenda": 69.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 204, "nome": "Body manga longa sereia", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 23.5, "frete": 2.0, "precoCusto": 25.5, "valorVenda": 79.0, "tamanhos": {"P": 2, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 205, "nome": "Mai\u00f4 manga longa mel\u00e2nica rosa", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 29.8, "frete": 2.0, "precoCusto": 31.8, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 206, "nome": "Mai\u00f4 manga longa unic\u00f3rnio rosa", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 29.8, "frete": 2.0, "precoCusto": 31.8, "valorVenda": 79.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 207, "nome": "Conjunto Macac\u00e3o sol lil\u00e1s + chapeu", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 45.2, "frete": 2.0, "precoCusto": 47.2, "valorVenda": 99.0, "tamanhos": {"P": 1, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 208, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - \u00e2ncora preto", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 0.0, "tamanhos": {"P": 0, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 209, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - praia", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 39.9, "frete": 2.0, "precoCusto": 41.9, "valorVenda": 0.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 210, "nome": "Conjunto camiseta, calcinha e chap\u00e9u - dino verde", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 44.9, "frete": 2.0, "precoCusto": 46.9, "valorVenda": 0.0, "tamanhos": {"P": 1, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 211, "nome": "Conjunto camiseta, calcinha e chap\u00e9u  - dino azul", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 44.9, "frete": 2.0, "precoCusto": 46.9, "valorVenda": 0.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 212, "nome": "Conjunto camiseta, calcinha e chap\u00e9u  - dino LARANJA", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 44.9, "frete": 2.0, "precoCusto": 46.9, "valorVenda": 110.0, "tamanhos": {"P": 0, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 213, "nome": "Macac\u00e3o dino azul", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 31.0, "frete": 2.0, "precoCusto": 33.0, "valorVenda": 79.0, "tamanhos": {"P": 2, "M": 1, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 214, "nome": "Conjunto body manga longa e chapeu dino royal", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 42.4, "frete": 2.0, "precoCusto": 44.4, "valorVenda": 99.0, "tamanhos": {"P": 3, "M": 0, "G": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 215, "nome": "Conjunto dino color fundo do mar", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 37.0, "frete": 2.0, "precoCusto": 39.0, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 216, "nome": "Conjunto listras fundo do mar", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 37.0, "frete": 2.0, "precoCusto": 39.0, "valorVenda": 89.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 217, "nome": "Camiseta UV50+ - MARINHO", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 17.9, "frete": 2.0, "precoCusto": 19.9, "valorVenda": 45.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 218, "nome": "Camiseta UV50+ - AZUL BIC", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 17.9, "frete": 2.0, "precoCusto": 19.9, "valorVenda": 45.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 219, "nome": "Camiseta UV50+ - ROSA CHICLETE", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 17.9, "frete": 2.0, "precoCusto": 19.9, "valorVenda": 45.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 220, "nome": "Camiseta UV50+ - ROXO", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 17.9, "frete": 2.0, "precoCusto": 19.9, "valorVenda": 45.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 221, "nome": "Chap\u00e9u sol UV50+ - lil\u00e1s", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 42.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 222, "nome": "Chap\u00e9u  UV50+ - Roxo", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 42.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 223, "nome": "Chap\u00e9u  UV50+ - Pink", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 42.0, "tamanhos": {"P": 1, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 224, "nome": "Chap\u00e9u  UV50+ - Rosa Chiclete", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 42.0, "tamanhos": {"P": 0, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 225, "nome": "Chap\u00e9u  UV50+ - Azul marinho", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 42.0, "tamanhos": {"P": 3, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 226, "nome": "Chap\u00e9u  UV50+  - COM ABAS - Rosa Chiclete", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 45.0, "tamanhos": {"P": 3, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 227, "nome": "Chap\u00e9u  UV50+  - COM ABAS - Roxo", "genero": "Menina", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 45.0, "tamanhos": {"P": 3, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 228, "nome": "Chap\u00e9u  UV50+  - COM ABAS - Azul Marinho", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 45.0, "tamanhos": {"P": 2, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 229, "nome": "Chap\u00e9u  UV50+  - COM ABAS - Azul Bic", "genero": "Menino", "categoria": "Moda Praia", "emoji": "\ud83c\udfd6\ufe0f", "custo": 18.9, "frete": 2.0, "precoCusto": 20.9, "valorVenda": 45.0, "tamanhos": {"P": 3, "M": 0, "G": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 230, "nome": "T\u00eanis para Beb\u00ea Com Velcro - \u00c2mbar", "genero": "Menino", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 59.0, "tamanhos": {"P": 2, "M": 3, "G": 2, "GG": 1, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 231, "nome": "T\u00eanis para Beb\u00ea Com Velcro - ROS\u00ca", "genero": "Menina", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 59.0, "tamanhos": {"P": 1, "M": 2, "G": 2, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 232, "nome": "T\u00eanis para Beb\u00ea Cano Alto Liso Branco", "genero": "Unissex", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 52.0, "tamanhos": {"P": 0, "M": 1, "G": 0, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 233, "nome": "T\u00eanis para Beb\u00ea Cano Alto Liso Preto", "genero": "Unissex", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 52.0, "tamanhos": {"P": 2, "M": 0, "G": 1, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 234, "nome": "T\u00eanis para Beb\u00ea Cano Alto Preto-Listra", "genero": "Unissex", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 52.0, "tamanhos": {"P": 1, "M": 2, "G": 2, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 235, "nome": "T\u00eanis para Beb\u00ea Cano Alto com Estrela Dourado", "genero": "Menina", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 52.0, "tamanhos": {"P": 1, "M": 1, "G": 1, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 236, "nome": "Sapatilha para Beb\u00ea com La\u00e7o de P\u00e9rola - Preto", "genero": "Menina", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 52.0, "tamanhos": {"P": 1, "M": 1, "G": 2, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}, {"id": 237, "nome": "Sapatilha para Beb\u00ea com La\u00e7o de P\u00e9rola - Rosa", "genero": "Menina", "categoria": "Cal\u00e7ados", "emoji": "\ud83d\udc5f", "custo": 0, "frete": 2.0, "precoCusto": 0, "valorVenda": 52.0, "tamanhos": {"P": 2, "M": 1, "G": 2, "GG": 0, "1": 0, "2": 0, "3": 0, "4": 0}, "foto": ""}];
+
+// ============ STATE ============
+var db = {
+  produtos: [],
+  pedidos: [],
+  clientes: [],
+  vendas: [],
+  nextPedId: 1,
+  nextCliId: 1,
+  nextVndId: 1
+};
+
+var estPage = 1;
+var estFiltGenero = "todos";
+var estFiltCat = "todas";
+var pedFiltStatus = "todos";
+var pickFiltCat = "todas";
+var pickSelProdId = 0;
+var vndCliId = 0;
+var vndItens = [];
+var editProdId = 0;
+var editCliId = 0;
+var editPedId = 0;
+var viewAtual = "dash";
+var isSaving = false;
+
+var TABS = [
+  {id:"dash",ico:"\ud83c\udfe0",lbl:"Início"},
+  {id:"est",ico:"\ud83d\udce6",lbl:"Estoque"},
+  {id:"vnd",ico:"\ud83d\uded2",lbl:"Vendas"},
+  {id:"ped",ico:"\ud83d\udccb",lbl:"Pedidos"},
+  {id:"cli",ico:"\ud83d\udc69",lbl:"Clientes"},
+  {id:"col",ico:"\ud83d\udcca",lbl:"Coleções"}
+];
+
+var STATUS_LIST = ["Aguardando pagamento","Pago","A entregar/retirar","Entregue","Cancelado"];
+var STATUS_COLOR = ["badge-status-ag","badge-status-pg","badge-status-en","badge-status-ok","badge-status-ca"];
+var CAT_COLORS = {
+  "Verão":"#f8be3e","Meia Estação":"#d4a054","Inverno":"#8fcbcf",
+  "Térmicos":"#7cb8e8","Avulsos":"#999","Moda Praia":"#4bc8a0","Calçados":"#bc99cf"
+};
+var AVATAR_COLORS = ["#bc99cf","#8fcbcf","#ffa4a4","#f8be3e","#7cb8e8","#4bc8a0"];
+
+function avatarColor(nome) {
+  return AVATAR_COLORS[nome.charCodeAt(0) % AVATAR_COLORS.length];
+}
+
+// ============ AUTH ============
+function fazerLogin() {
+  var email = document.getElementById("loginEmail").value.trim();
+  var senha = document.getElementById("loginSenha").value;
+  var btn = document.getElementById("loginBtn");
+  var err = document.getElementById("loginErr");
+  err.style.display = "none";
+  btn.textContent = "Entrando...";
+  btn.disabled = true;
+  auth.signInWithEmailAndPassword(email, senha).then(function() {
+    // onAuthStateChanged cuida do resto
+  }).catch(function(e) {
+    err.textContent = "E-mail ou senha incorretos.";
+    err.style.display = "";
+    btn.textContent = "Entrar";
+    btn.disabled = false;
+  });
+}
+
+function fazerLogout() {
+  if (!confirm("Sair do sistema?")) return;
+  auth.signOut();
+}
+
+// Login ao pressionar Enter
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && document.getElementById("loginScreen").style.display !== "none") {
+    fazerLogin();
+  }
+});
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("appContent").style.display = "";
+    carregarDoFirebase();
+  } else {
+    document.getElementById("loginScreen").style.display = "flex";
+    document.getElementById("appContent").style.display = "none";
+  }
+});
+
+// ============ SYNC STATUS ============
+function setSyncStatus(status) {
+  var dot = document.getElementById("syncDot");
+  var txt = document.getElementById("syncTxt");
+  if (!dot) return;
+  if (status === "saving") {
+    dot.className = "sync-dot syncing";
+    txt.textContent = "salvando...";
+  } else if (status === "ok") {
+    dot.className = "sync-dot";
+    txt.textContent = "sincronizado";
+  } else {
+    dot.className = "sync-dot";
+    txt.textContent = "erro";
+  }
+}
+
+// ============ FIREBASE CRUD ============
+function carregarDoFirebase() {
+  showLoading(true);
+  firestore.collection("dados").doc("principal").get().then(function(doc) {
+    showLoading(false);
+    if (doc.exists) {
+      var d = doc.data();
+      db.produtos = d.produtos || [];
+      db.pedidos = d.pedidos || [];
+      db.clientes = d.clientes || [];
+      db.vendas = d.vendas || [];
+      db.nextPedId = d.nextPedId || 1;
+      db.nextCliId = d.nextCliId || 1;
+      db.nextVndId = d.nextVndId || 1;
+    } else {
+      // Primeira vez: carrega produtos padrao
+      db.produtos = JSON.parse(JSON.stringify(PRODUTOS_PADRAO));
+      salvarNoFirebase();
+    }
+    buildNav();
+    renderDash();
+    document.getElementById("fabBtn").style.display = "none";
+    setSyncStatus("ok");
+  }).catch(function(e) {
+    showLoading(false);
+    alert("Erro ao carregar dados: " + e.message);
+  });
+}
+
+function salvarNoFirebase() {
+  setSyncStatus("saving");
+  var d = {
+    produtos: db.produtos.map(function(p) {
+      var c = {};
+      for (var k in p) { if (k !== "foto") c[k] = p[k]; }
+      return c;
+    }),
+    pedidos: db.pedidos,
+    clientes: db.clientes,
+    vendas: db.vendas.slice(-200),
+    nextPedId: db.nextPedId,
+    nextCliId: db.nextCliId,
+    nextVndId: db.nextVndId
+  };
+  firestore.collection("dados").doc("principal").set(d).then(function() {
+    setSyncStatus("ok");
+  }).catch(function(e) {
+    setSyncStatus("erro");
+    console.log("Erro ao salvar:", e);
+  });
+}
+
+// alias para compatibilidade com codigo existente
+function salvar() { salvarNoFirebase(); }
+
+function showLoading(v) {
+  document.getElementById("loadingOverlay").style.display = v ? "flex" : "none";
+}
+
+// ============ NAV ============
+function buildNav() {
+  var bn = document.getElementById("botNav");
+  var dn = document.getElementById("deskNav");
+  var bh = "";
+  var dh = "";
+  for (var i = 0; i < TABS.length; i++) {
+    var t = TABS[i];
+    var ac = t.id === viewAtual ? " active" : "";
+    bh += "<button class=\"" + ac.trim() + "\" onclick=\"navTo('" + t.id + "')\">" +
+      "<span class=\"ico\">" + t.ico + "</span>" + t.lbl + "</button>";
+    dh += "<button class=\"" + ac.trim() + "\" onclick=\"navTo('" + t.id + "')\">" + t.ico + " " + t.lbl + "</button>";
+  }
+  bn.innerHTML = bh;
+  dn.innerHTML = dh;
+}
+
+function navTo(id) {
+  viewAtual = id;
+  var views = document.querySelectorAll(".view");
+  for (var i = 0; i < views.length; i++) views[i].classList.remove("active");
+  document.getElementById("v-" + id).classList.add("active");
+  var bbtns = document.querySelectorAll(".bot-nav button");
+  for (var j = 0; j < bbtns.length; j++) bbtns[j].classList.remove("active");
+  var tidx = -1;
+  for (var ti = 0; ti < TABS.length; ti++) { if (TABS[ti].id === id) { tidx = ti; break; } }
+  if (tidx >= 0 && bbtns[tidx]) bbtns[tidx].classList.add("active");
+  var dbtns = document.querySelectorAll(".desk-nav button");
+  for (var k = 0; k < dbtns.length; k++) dbtns[k].classList.remove("active");
+  if (tidx >= 0 && dbtns[tidx]) dbtns[tidx].classList.add("active");
+  if (id === "dash") renderDash();
+  if (id === "est") { estPage = 1; renderEst(); }
+  if (id === "vnd") renderVndHist();
+  if (id === "ped") renderPed();
+  if (id === "cli") renderCli();
+  if (id === "col") renderCol();
+  document.getElementById("fabBtn").style.display = (id === "est" || id === "cli") ? "flex" : "none";
+}
+
+// ============ MODAL ============
+function abrirModal(id) { document.getElementById(id).classList.add("open"); }
+function fecharModal(id) { document.getElementById(id).classList.remove("open"); }
+
+document.addEventListener("click", function(e) {
+  var overlays = document.querySelectorAll(".modal-overlay");
+  for (var i = 0; i < overlays.length; i++) {
+    if (e.target === overlays[i]) overlays[i].classList.remove("open");
+  }
+});
+
+// ============ HELPERS ============
+function fmt(v) { return "R$ " + parseFloat(v || 0).toFixed(2).replace(".",","); }
+function fmtDate(ts) {
+  if (!ts) return "-";
+  var d = new Date(ts);
+  return d.getDate().toString().padStart(2,"0") + "/" + (d.getMonth()+1).toString().padStart(2,"0") + "/" + d.getFullYear();
+}
+function totalTams(p) {
+  var t = 0;
+  for (var k in p.tamanhos) t += (p.tamanhos[k] || 0);
+  return t;
+}
+function getProd(id) {
+  for (var i = 0; i < db.produtos.length; i++) if (db.produtos[i].id === id) return db.produtos[i];
+  return null;
+}
+function getCli(id) {
+  for (var i = 0; i < db.clientes.length; i++) if (db.clientes[i].id === id) return db.clientes[i];
+  return null;
+}
+function getPed(id) {
+  for (var i = 0; i < db.pedidos.length; i++) if (db.pedidos[i].id === id) return db.pedidos[i];
+  return null;
+}
+function statusBadge(s) {
+  var idx = STATUS_LIST.indexOf(s);
+  if (idx < 0) idx = 0;
+  return "<span class=\"badge " + STATUS_COLOR[idx] + "\">" + s + "</span>";
+}
+function categorias() {
+  var cats = {};
+  for (var i = 0; i < db.produtos.length; i++) cats[db.produtos[i].categoria] = 1;
+  return Object.keys(cats);
+}
+
+// ============ DASH ============
+function renderDash() {
+  var totalPecas = 0, totalCusto = 0, totalVenda = 0, totalVendido = 0;
+  for (var i = 0; i < db.produtos.length; i++) {
+    var p = db.produtos[i];
+    var qt = totalTams(p);
+    totalPecas += qt;
+    totalCusto += qt * (p.precoCusto || 0);
+    totalVenda += qt * (p.valorVenda || 0);
+  }
+  for (var j = 0; j < db.vendas.length; j++) totalVendido += db.vendas[j].total || 0;
+  document.getElementById("dashMetrics").innerHTML =
+    metricCard("\ud83d\udce6", totalPecas, "Total Peças") +
+    metricCard("\ud83d\udcb0", fmt(totalCusto), "Custo Estoque") +
+    metricCard("\ud83d\udcb5", fmt(totalVenda), "Valor Venda") +
+    metricCard("\ud83c\udf1f", fmt(totalVendido), "Total Vendido");
+
+  var ultV = db.vendas.slice(-5).reverse();
+  var vHtml = "<div class=\"sec-title\">Ultimas Vendas</div><div class=\"card\">";
+  if (ultV.length === 0) vHtml += "<div class=\"empty\">Nenhuma venda ainda</div>";
+  for (var k = 0; k < ultV.length; k++) {
+    var v = ultV[k];
+    var c = getCli(v.clienteId);
+    vHtml += "<div style=\"display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;\">" +
+      "<div><strong>" + (c ? c.nome : "Sem cliente") + "</strong><br><small style=\"color:#777;\">" + fmtDate(v.data) + "</small></div>" +
+      "<div style=\"font-weight:800;color:#27ae60;\">" + fmt(v.total) + "</div></div>";
+  }
+  vHtml += "</div>";
+  document.getElementById("dashUltVendas").innerHTML = vHtml;
+
+  var abertos = db.pedidos.filter(function(p){ return p.status !== "Entregue" && p.status !== "Cancelado"; });
+  var pHtml = "<div class=\"sec-title\" style=\"margin-top:12px;\">Pedidos em Aberto</div><div class=\"card\">";
+  if (abertos.length === 0) pHtml += "<div class=\"empty\">Nenhum pedido em aberto</div>";
+  for (var m = 0; m < Math.min(abertos.length, 5); m++) {
+    var pd = abertos[m];
+    var cl = getCli(pd.clienteId);
+    pHtml += "<div style=\"display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;\">" +
+      "<div><strong>#" + pd.numero + " " + (cl ? cl.nome : "-") + "</strong><br>" + statusBadge(pd.status) + "</div>" +
+      "<div style=\"font-weight:800;\">" + fmt(pd.total) + "</div></div>";
+  }
+  pHtml += "</div>";
+  document.getElementById("dashPedidos").innerHTML = pHtml;
+
+  var baixo = db.pedidos.filter(function(p){ return totalTams(p) <= 2 && totalTams(p) > 0; });
+  var zero = db.produtos.filter(function(p){ return totalTams(p) === 0; });
+  var bx = db.produtos.filter(function(p){ return totalTams(p) <= 2 && totalTams(p) > 0; });
+  var aHtml = "<div class=\"sec-title\" style=\"margin-top:12px;\">Alertas de Estoque</div>";
+  if (zero.length > 0) aHtml += "<div class=\"alert alert-err\">" + zero.length + " produto(s) sem estoque</div>";
+  if (bx.length > 0) aHtml += "<div class=\"alert alert-warn\">" + bx.length + " produto(s) com estoque baixo (1-2 peças)</div>";
+  if (zero.length === 0 && bx.length === 0) aHtml += "<div class=\"alert alert-ok\">Estoque saudável!</div>";
+  document.getElementById("dashAlertas").innerHTML = aHtml;
+}
+
+function metricCard(ico, val, lbl) {
+  return "<div class=\"metric\"><div style=\"font-size:24px;\">" + ico + "</div><div class=\"val\">" + val + "</div><div class=\"lbl\">" + lbl + "</div></div>";
+}
+
+// ============ ESTOQUE ============
+function renderEst() {
+  var busca = (document.getElementById("buscaEst") ? document.getElementById("buscaEst").value : "").toLowerCase();
+  var cats = ["todas"].concat(categorias());
+  var gFiltHtml = "";
+  var generos = ["todos","Menina","Menino","Unissex"];
+  for (var i = 0; i < generos.length; i++) {
+    var ac = generos[i] === estFiltGenero ? " active" : "";
+    gFiltHtml += "<button class=\"filter-btn" + ac + "\" data-g=\"" + generos[i] + "\" onclick=\"estFiltGenero=this.dataset.g;renderEst();\">" + generos[i] + "</button>";
+  }
+  document.getElementById("filtGenero").innerHTML = gFiltHtml;
+  var cFiltHtml = "";
+  for (var j = 0; j < cats.length; j++) {
+    var ac2 = cats[j] === estFiltCat ? " active" : "";
+    cFiltHtml += "<button class=\"filter-btn" + ac2 + "\" data-c=\"" + cats[j] + "\" onclick=\"estFiltCat=this.dataset.c;estPage=1;renderEst();\">" + cats[j] + "</button>";
+  }
+  document.getElementById("filtCat").innerHTML = cFiltHtml;
+
+  var filtrados = db.produtos.filter(function(p) {
+    if (estFiltGenero !== "todos" && p.genero !== estFiltGenero) return false;
+    if (estFiltCat !== "todas" && p.categoria !== estFiltCat) return false;
+    if (busca && p.nome.toLowerCase().indexOf(busca) < 0) return false;
+    return true;
+  });
+  var perPage = 24;
+  var totalPages = Math.ceil(filtrados.length / perPage);
+  if (estPage > totalPages) estPage = 1;
+  var start = (estPage - 1) * perPage;
+  var page = filtrados.slice(start, start + perPage);
+  var html = "<div class=\"grid2\">";
+  for (var k = 0; k < page.length; k++) html += prodCard(page[k]);
+  html += "</div>";
+  if (filtrados.length === 0) html = "<div class=\"empty\"><div class=\"ei\">\ud83d\udce6</div><br>Nenhum produto encontrado</div>";
+  document.getElementById("estGrid").innerHTML = html;
+  var pagHtml = "";
+  if (totalPages > 1) {
+    for (var p = 1; p <= totalPages; p++) {
+      var pac = p === estPage ? " active" : "";
+      pagHtml += "<button class=\"page-btn" + pac + "\" data-p=\"" + p + "\" onclick=\"estPage=parseInt(this.dataset.p);renderEst();\">" + p + "</button>";
+    }
+  }
+  document.getElementById("estPag").innerHTML = pagHtml;
+}
+
+function prodCard(p) {
+  var qt = totalTams(p);
+  var tamHtml = "";
+  for (var k in p.tamanhos) {
+    var q = p.tamanhos[k] || 0;
+    if (q === 0) tamHtml += "<span class=\"tam-tag tam-zero\">" + k + ":0</span>";
+    else if (q <= 1) tamHtml += "<span class=\"tam-tag tam-low\">" + k + ":" + q + "</span>";
+    else tamHtml += "<span class=\"tam-tag tam-ok\">" + k + ":" + q + "</span>";
+  }
+  var genBadge = p.genero === "Menina" ? "badge-f" : (p.genero === "Menino" ? "badge-m" : "badge-u");
+  var fotoHtml = p.foto ? "<img src=\"" + p.foto + "\" class=\"prod-foto\">" : "<div class=\"prod-emoji\">" + (p.emoji || "\ud83d\udce6") + "</div>";
+  return "<div class=\"prod-card\">" +
+    fotoHtml +
+    "<div class=\"prod-nome\">" + p.nome + "</div>" +
+    "<div><span class=\"badge " + genBadge + "\">" + p.genero + "</span> <span style=\"font-size:11px;color:#777;\">" + p.categoria + "</span></div>" +
+    "<div class=\"tam-grid\">" + tamHtml + "</div>" +
+    "<div class=\"prod-price\">Custo: " + fmt(p.precoCusto) + " | <strong>Venda: " + fmt(p.valorVenda) + "</strong></div>" +
+    "<div class=\"prod-price\">Total: " + qt + " peças | Custo total: " + fmt(qt * p.precoCusto) + "</div>" +
+    "<div class=\"prod-actions\">" +
+    "<button class=\"btn btn-outline btn-xs\" data-pid=\"" + p.id + "\" onclick=\"abrirModalProd(parseInt(this.dataset.pid))\">\u270f️ Editar</button>" +
+    "<button class=\"btn btn-danger btn-xs\" data-pid=\"" + p.id + "\" onclick=\"excluirProd(parseInt(this.dataset.pid))\">\ud83d\uddd1️</button>" +
+    "</div></div>";
+}
+
+// ============ MODAL PRODUTO ============
+function abrirModalProd(id) {
+  editProdId = id;
+  var p = id ? getProd(id) : null;
+  document.getElementById("mProdTitle").textContent = id ? "Editar Produto" : "Novo Produto";
+  var cats = ["Verão","Meia Estação","Inverno","Térmicos","Avulsos","Moda Praia","Calçados"];
+  var catOpts = "";
+  for (var i = 0; i < cats.length; i++) catOpts += "<option value=\"" + cats[i] + "\"" + (p && p.categoria === cats[i] ? " selected" : "") + ">" + cats[i] + "</option>";
+  var tams = ["P","M","G","GG","1","2","3","4"];
+  var tamInputs = "";
+  for (var j = 0; j < tams.length; j++) {
+    var val = p && p.tamanhos ? (p.tamanhos[tams[j]] || 0) : 0;
+    tamInputs += "<div class=\"col\"><label class=\"lbl\">" + tams[j] + "</label><input class=\"inp\" type=\"number\" id=\"pt_" + tams[j] + "\" value=\"" + val + "\" min=\"0\"></div>";
+  }
+  var html = "<div class=\"form-group\"><label class=\"lbl\">Nome</label><input class=\"inp\" id=\"pNome\" value=\"" + (p ? p.nome : "") + "\"></div>" +
+    "<div class=\"row\"><div class=\"col form-group\"><label class=\"lbl\">Gênero</label><select class=\"inp\" id=\"pGenero\">" +
+    ["Menina","Menino","Unissex"].map(function(g){ return "<option" + (p && p.genero===g?" selected":"") + ">" + g + "</option>"; }).join("") +
+    "</select></div><div class=\"col form-group\"><label class=\"lbl\">Categoria</label><select class=\"inp\" id=\"pCat\">" + catOpts + "</select></div></div>" +
+    "<div class=\"row\"><div class=\"col form-group\"><label class=\"lbl\">Custo (R$)</label><input class=\"inp\" type=\"number\" id=\"pCusto\" value=\"" + (p ? p.custo : "") + "\" step=\"0.01\" oninput=\"calcPrecoCusto()\"></div>" +
+    "<div class=\"col form-group\"><label class=\"lbl\">Frete+Emb (R$)</label><input class=\"inp\" type=\"number\" id=\"pFrete\" value=\"" + (p ? p.frete : 2) + "\" step=\"0.01\" oninput=\"calcPrecoCusto()\"></div></div>" +
+    "<div class=\"row\"><div class=\"col form-group\"><label class=\"lbl\">Preço Custo</label><input class=\"inp\" id=\"pPrecoCusto\" readonly></div>" +
+    "<div class=\"col form-group\"><label class=\"lbl\">Valor Venda (R$)</label><input class=\"inp\" type=\"number\" id=\"pVenda\" value=\"" + (p ? p.valorVenda : "") + "\" step=\"0.01\"></div></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">Foto</label><input class=\"inp\" type=\"file\" accept=\"image/*\" id=\"pFoto\" onchange=\"prevFoto(event)\"><div id=\"prevFotoDiv\" style=\"margin-top:8px;\"></div></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">Quantidades por Tamanho</label><div class=\"row\" style=\"flex-wrap:wrap;\">" + tamInputs + "</div></div>" +
+    "<button class=\"btn btn-success btn-full\" onclick=\"salvarProd()\">Salvar</button>";
+  document.getElementById("mProdForm").innerHTML = html;
+  if (p) document.getElementById("pPrecoCusto").value = fmt(p.precoCusto);
+  if (p && p.foto) document.getElementById("prevFotoDiv").innerHTML = "<img src=\"" + p.foto + "\" style=\"max-width:100%;border-radius:10px;max-height:120px;\">";
+  abrirModal("m-prod");
+}
+
+var fotoBase64 = "";
+function prevFoto(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement("canvas");
+      var max = 400;
+      var w = img.width, h = img.height;
+      if (w > max) { h = h * max / w; w = max; }
+      if (h > max) { w = w * max / h; h = max; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      fotoBase64 = canvas.toDataURL("image/jpeg", 0.7);
+      document.getElementById("prevFotoDiv").innerHTML = "<img src=\"" + fotoBase64 + "\" style=\"max-width:100%;border-radius:10px;max-height:120px;\">";
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function calcPrecoCusto() {
+  var c = parseFloat(document.getElementById("pCusto").value) || 0;
+  var f = parseFloat(document.getElementById("pFrete").value) || 0;
+  document.getElementById("pPrecoCusto").value = fmt(c + f);
+}
+
+function salvarProd() {
+  var nome = document.getElementById("pNome").value.trim();
+  if (!nome) { alert("Informe o nome!"); return; }
+  var custo = parseFloat(document.getElementById("pCusto").value) || 0;
+  var frete = parseFloat(document.getElementById("pFrete").value) || 2;
+  var venda = parseFloat(document.getElementById("pVenda").value) || 0;
+  var cat = document.getElementById("pCat").value;
+  var gen = document.getElementById("pGenero").value;
+  var tams = {};
+  var tamKeys = ["P","M","G","GG","1","2","3","4"];
+  for (var i = 0; i < tamKeys.length; i++) {
+    var el = document.getElementById("pt_" + tamKeys[i]);
+    if (el) tams[tamKeys[i]] = parseInt(el.value) || 0;
+  }
+  var emojiMap = {"Verão":"\u2600\ufe0f","Meia Estação":"\ud83c\udf42","Inverno":"\ud83e\udde5","Térmicos":"\ud83c\udf21\ufe0f","Avulsos":"\ud83c\udff7\ufe0f","Moda Praia":"\ud83c\udfd6\ufe0f","Calçados":"\ud83d\udc5f"};
+  if (editProdId) {
+    var p = getProd(editProdId);
+    p.nome = nome; p.custo = custo; p.frete = frete; p.precoCusto = custo + frete;
+    p.valorVenda = venda; p.categoria = cat; p.genero = gen; p.tamanhos = tams;
+    p.emoji = emojiMap[cat] || "\ud83d\udce6";
+    if (fotoBase64) p.foto = fotoBase64;
+  } else {
+    var maxId = 0;
+    for (var j = 0; j < db.produtos.length; j++) if (db.produtos[j].id > maxId) maxId = db.produtos[j].id;
+    db.produtos.push({id:maxId+1,nome:nome,genero:gen,categoria:cat,emoji:emojiMap[cat]||"\ud83d\udce6",custo:custo,frete:frete,precoCusto:custo+frete,valorVenda:venda,tamanhos:tams,foto:fotoBase64||""});
+  }
+  fotoBase64 = "";
+  salvar();
+  fecharModal("m-prod");
+  renderEst();
+}
+
+function excluirProd(id) {
+  if (!confirm("Excluir este produto?")) return;
+  db.produtos = db.produtos.filter(function(p){ return p.id !== id; });
+  salvar();
+  renderEst();
+}
+
+// ============ VENDAS ============
+function showVndTab(tab) {
+  var tabs = document.querySelectorAll("#v-vnd .tab");
+  tabs[0].classList.toggle("active", tab === "nova");
+  tabs[1].classList.toggle("active", tab === "hist");
+  document.getElementById("vnd-nova").style.display = tab === "nova" ? "" : "none";
+  document.getElementById("vnd-hist").style.display = tab === "hist" ? "" : "none";
+  if (tab === "hist") renderVndHist();
+}
+
+function abrirSelCli() { renderSelCli(); abrirModal("m-cli-sel"); }
+
+function renderSelCli() {
+  var busca = (document.getElementById("selCliBusca") ? document.getElementById("selCliBusca").value : "").toLowerCase();
+  var html = "";
+  for (var i = 0; i < db.clientes.length; i++) {
+    var c = db.clientes[i];
+    if (busca && c.nome.toLowerCase().indexOf(busca) < 0 && (!c.nomeCrianca || c.nomeCrianca.toLowerCase().indexOf(busca) < 0)) continue;
+    html += "<div class=\"card\" style=\"margin-bottom:8px;cursor:pointer;\" data-cid=\"" + c.id + "\" onclick=\"selCli(parseInt(this.dataset.cid))\">" +
+      "<strong>" + c.nome + "</strong>" + (c.nomeCrianca ? " <small>(\ud83d\udc76 " + c.nomeCrianca + ")</small>" : "") +
+      "<br><small style=\"color:#777;\">" + (c.whatsapp || "") + "</small></div>";
+  }
+  if (!html) html = "<div class=\"empty\">Nenhuma cliente cadastrada</div>";
+  document.getElementById("selCliLista").innerHTML = html;
+}
+
+function selCli(id) {
+  vndCliId = id;
+  var c = getCli(id);
+  document.getElementById("vndCliSel").style.display = "";
+  document.getElementById("vndCliSel").textContent = "Cliente: " + c.nome + (c.whatsapp ? " | " + c.whatsapp : "");
+  fecharModal("m-cli-sel");
+}
+
+function abrirPickProd() {
+  pickSelProdId = 0;
+  document.getElementById("pickBusca").value = "";
+  document.getElementById("pickConfig").style.display = "none";
+  renderPickFiltros();
+  renderPick();
+  abrirModal("m-pick");
+}
+
+function renderPickFiltros() {
+  var cats = ["todas"].concat(categorias());
+  var h = "";
+  for (var i = 0; i < cats.length; i++) {
+    var ac = cats[i] === pickFiltCat ? " active" : "";
+    h += "<button class=\"filter-btn" + ac + "\" data-c=\"" + cats[i] + "\" onclick=\"pickFiltCat=this.dataset.c;renderPick();\">" + cats[i] + "</button>";
+  }
+  document.getElementById("pickFiltCat").innerHTML = h;
+}
+
+function renderPick() {
+  var busca = document.getElementById("pickBusca").value.toLowerCase();
+  var filtrados = db.produtos.filter(function(p) {
+    if (pickFiltCat !== "todas" && p.categoria !== pickFiltCat) return false;
+    if (busca && p.nome.toLowerCase().indexOf(busca) < 0) return false;
+    return totalTams(p) > 0;
+  });
+  var html = "<div class=\"pick-grid\">";
+  for (var i = 0; i < filtrados.length; i++) {
+    var p = filtrados[i];
+    var sel = p.id === pickSelProdId ? " sel" : "";
+    var fotoHtml = p.foto ? "<img src=\"" + p.foto + "\" style=\"width:100%;height:60px;object-fit:cover;border-radius:8px;\">" : "<div class=\"pe\">" + (p.emoji || "\ud83d\udce6") + "</div>";
+    html += "<div class=\"pick-item" + sel + "\" data-pid=\"" + p.id + "\" onclick=\"selectPickProd(parseInt(this.dataset.pid))\">" +
+      fotoHtml + "<div class=\"pn\">" + p.nome + "</div><div style=\"font-size:11px;color:#777;\">Est: " + totalTams(p) + " | " + fmt(p.valorVenda) + "</div></div>";
+  }
+  html += "</div>";
+  if (filtrados.length === 0) html = "<div class=\"empty\">Nenhum produto disponível</div>";
+  document.getElementById("pickGrid").innerHTML = html;
+}
+
+function selectPickProd(id) {
+  pickSelProdId = id;
+  var items = document.querySelectorAll(".pick-item");
+  for (var i = 0; i < items.length; i++) items[i].classList.remove("sel");
+  var el = document.querySelector(".pick-item[data-pid=\"" + id + "\"]");
+  if (el) el.classList.add("sel");
+  var p = getProd(id);
+  if (!p) return;
+  var tamOpts = "";
+  for (var k in p.tamanhos) {
+    if (p.tamanhos[k] > 0) tamOpts += "<option value=\"" + k + "\">" + k + " (estoque: " + p.tamanhos[k] + ")</option>";
+  }
+  document.getElementById("pickTam").innerHTML = tamOpts;
+  document.getElementById("pickQtd").value = 1;
+  document.getElementById("pickConfig").style.display = "";
+}
+
+function addItemVenda() {
+  if (!pickSelProdId) return;
+  var p = getProd(pickSelProdId);
+  var tam = document.getElementById("pickTam").value;
+  var qtd = parseInt(document.getElementById("pickQtd").value) || 1;
+  if (qtd < 1) { alert("Quantidade inválida"); return; }
+  if (!p.tamanhos[tam] || p.tamanhos[tam] < qtd) { alert("Estoque insuficiente!"); return; }
+  vndItens.push({prodId:pickSelProdId,nome:p.nome,tamanho:tam,qtd:qtd,valor:p.valorVenda});
+  fecharModal("m-pick");
+  renderVndItens();
+}
+
+function calcTotaisVenda() {
+  var subtotal = 0;
+  for (var i = 0; i < vndItens.length; i++) subtotal += vndItens[i].valor * vndItens[i].qtd;
+  var descontoEl = document.getElementById("vndDesconto");
+  var tipoEl = document.getElementById("vndDescontoTipo");
+  var freteEl = document.getElementById("vndFrete");
+  var descVal = descontoEl ? (parseFloat(descontoEl.value) || 0) : 0;
+  var tipo = tipoEl ? tipoEl.value : "R";
+  var freteVal = freteEl ? (parseFloat(freteEl.value) || 0) : 0;
+  var descontoR = tipo === "%" ? Math.round(subtotal * descVal / 100 * 100) / 100 : descVal;
+  if (descontoR > subtotal) descontoR = subtotal;
+  var total = subtotal - descontoR + freteVal;
+  return {subtotal:subtotal, descontoR:descontoR, frete:freteVal, total:total};
+}
+
+function renderVndItens() {
+  var html = "";
+  for (var i = 0; i < vndItens.length; i++) {
+    var it = vndItens[i];
+    var sub = it.valor * it.qtd;
+    html += "<div style=\"display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;\">" +
+      "<div><strong>" + it.nome + "</strong><br><small>Tam: " + it.tamanho + " | Qtd: " + it.qtd + " | " + fmt(it.valor) + " cada</small></div>" +
+      "<div style=\"display:flex;align-items:center;gap:8px;\">" + fmt(sub) +
+      "<button class=\"btn btn-danger btn-xs\" data-idx=\"" + i + "\" onclick=\"removeItemVenda(parseInt(this.dataset.idx))\">\u2715</button></div></div>";
+  }
+  document.getElementById("vndItens").innerHTML = html || "<div style=\"color:#777;font-size:13px;\">Nenhum item adicionado</div>";
+  if (vndItens.length > 0) {
+    var t = calcTotaisVenda();
+    document.getElementById("vndTotal").style.display = "";
+    var resumoHtml = "";
+    if (t.descontoR > 0) resumoHtml += "<div style=\"display:flex;justify-content:space-between;\"><span>Subtotal:</span><span>" + fmt(t.subtotal) + "</span></div>" +
+      "<div style=\"display:flex;justify-content:space-between;color:#e74c3c;\"><span>Desconto:</span><span>- " + fmt(t.descontoR) + "</span></div>";
+    if (t.frete > 0) resumoHtml += "<div style=\"display:flex;justify-content:space-between;color:#2980b9;\"><span>Frete cliente:</span><span>+ " + fmt(t.frete) + "</span></div>";
+    if (resumoHtml) {
+      document.getElementById("vndResumo").style.display = "";
+      document.getElementById("vndResumo").innerHTML = resumoHtml;
+    } else {
+      document.getElementById("vndResumo").style.display = "none";
+    }
+    document.getElementById("vndTotal").innerHTML = "Total: <span style=\"color:#27ae60;\">" + fmt(t.total) + "</span>";
+  } else {
+    document.getElementById("vndTotal").style.display = "none";
+    document.getElementById("vndResumo").style.display = "none";
+  }
+}
+
+function removeItemVenda(idx) {
+  vndItens.splice(idx, 1);
+  renderVndItens();
+}
+
+function confirmarVenda() {
+  if (vndItens.length === 0) { alert("Adicione pelo menos um produto!"); return; }
+  for (var i = 0; i < vndItens.length; i++) {
+    var it = vndItens[i];
+    var p = getProd(it.prodId);
+    if (p) p.tamanhos[it.tamanho] = Math.max(0, (p.tamanhos[it.tamanho] || 0) - it.qtd);
+  }
+  var t = calcTotaisVenda();
+  var venda = {id:db.nextVndId++, clienteId:vndCliId, itens:JSON.parse(JSON.stringify(vndItens)),
+    subtotal:t.subtotal, desconto:t.descontoR, frete:t.frete, total:t.total, data:Date.now()};
+  db.vendas.push(venda);
+  var num = db.nextPedId < 10 ? "00" + db.nextPedId : (db.nextPedId < 100 ? "0" + db.nextPedId : "" + db.nextPedId);
+  var cli = getCli(vndCliId);
+  var ped = {id:db.nextPedId, numero:num, clienteId:vndCliId, nomeCliente:cli ? cli.nome : "Sem cliente",
+    whatsapp:cli ? cli.whatsapp : "", itens:JSON.parse(JSON.stringify(vndItens)),
+    subtotal:t.subtotal, desconto:t.descontoR, frete:t.frete, total:t.total,
+    status:"Aguardando pagamento", formaEntrega:"", formaPagamento:"", obs:"",
+    data:Date.now(), historico:[{data:Date.now(), acao:"Pedido criado"}]};
+  db.pedidos.push(ped);
+  db.nextPedId++;
+  vndItens = [];
+  vndCliId = 0;
+  // reset campos
+  var dEl = document.getElementById("vndDesconto");
+  var fEl = document.getElementById("vndFrete");
+  if (dEl) dEl.value = "0";
+  if (fEl) fEl.value = "0";
+  document.getElementById("vndCliSel").style.display = "none";
+  salvar();
+  renderVndItens();
+  alert("Venda confirmada! Pedido #" + num + " criado.");
+  navTo("ped");
+}
+
+function renderVndHist() {
+  var html = "";
+  var vends = db.vendas.slice().reverse();
+  for (var i = 0; i < vends.length; i++) {
+    var v = vends[i];
+    var c = getCli(v.clienteId);
+    html += "<div class=\"card\" style=\"margin-bottom:8px;\">" +
+      "<div style=\"display:flex;justify-content:space-between;\">" +
+      "<strong>" + (c ? c.nome : "Sem cliente") + "</strong>" +
+      "<span style=\"color:#27ae60;font-weight:700;\">" + fmt(v.total) + "</span></div>" +
+      "<small style=\"color:#777;\">" + fmtDate(v.data) + " | " + v.itens.length + " item(ns)</small></div>";
+  }
+  if (!html) html = "<div class=\"empty\"><div class=\"ei\">\ud83d\uded2</div><br>Nenhuma venda</div>";
+  document.getElementById("histVendas").innerHTML = html;
+}
+
+// ============ PEDIDOS ============
+function renderPed() {
+  var statuses = ["todos","Aguardando pagamento","Pago","A entregar/retirar","Entregue","Cancelado"];
+  var h = "";
+  for (var i = 0; i < statuses.length; i++) {
+    var lbl = statuses[i] === "todos" ? "Todos" : statuses[i];
+    var ac = statuses[i] === pedFiltStatus ? " active" : "";
+    h += "<button class=\"filter-btn" + ac + "\" data-s=\"" + statuses[i] + "\" onclick=\"pedFiltStatus=this.dataset.s;renderPed();\">" + lbl + "</button>";
+  }
+  document.getElementById("filtPedStatus").innerHTML = h;
+  var peds = db.pedidos.slice().reverse().filter(function(p) {
+    return pedFiltStatus === "todos" || p.status === pedFiltStatus;
+  });
+  var html = "";
+  for (var j = 0; j < peds.length; j++) html += pedCard(peds[j]);
+  if (!html) html = "<div class=\"empty\"><div class=\"ei\">\ud83d\udccb</div><br>Nenhum pedido</div>";
+  document.getElementById("pedLista").innerHTML = html;
+}
+
+function pedCard(p) {
+  var itRes = "";
+  for (var i = 0; i < Math.min(p.itens.length, 2); i++) {
+    var it = p.itens[i];
+    itRes += it.nome + " (Tam " + it.tamanho + " x" + it.qtd + ")";
+    if (i < Math.min(p.itens.length,2)-1) itRes += ", ";
+  }
+  if (p.itens.length > 2) itRes += " +" + (p.itens.length-2) + " mais";
+  var nextStatus = "";
+  var idx = STATUS_LIST.indexOf(p.status);
+  if (idx >= 0 && idx < STATUS_LIST.length-2) nextStatus = STATUS_LIST[idx+1];
+  return "<div class=\"ped-card\">" +
+    "<div class=\"ped-header\">" +
+    "<div><strong>#" + p.numero + " " + (p.nomeCliente || "-") + "</strong><br><small style=\"color:#777;\">" + fmtDate(p.data) + "</small></div>" +
+    statusBadge(p.status) + "</div>" +
+    "<div style=\"font-size:12px;color:#777;margin-bottom:8px;\">" + itRes + "</div>" +
+    "<div style=\"display:flex;justify-content:space-between;align-items:center;\">" +
+    "<span style=\"font-weight:800;color:#27ae60;\">" + fmt(p.total) + "</span>" +
+    "<div style=\"display:flex;gap:6px;flex-wrap:wrap;\">" +
+    "<button class=\"btn btn-outline btn-xs\" data-pid=\"" + p.id + "\" onclick=\"verPed(parseInt(this.dataset.pid))\">Detalhes</button>" +
+    (nextStatus ? "<button class=\"btn btn-primary btn-xs\" data-pid=\"" + p.id + "\" data-ns=\"" + nextStatus + "\" onclick=\"avancarStatus(parseInt(this.dataset.pid),this.dataset.ns)\">\u2192 " + nextStatus.split(" ")[0] + "</button>" : "") +
+    "<button class=\"btn btn-am btn-xs\" data-pid=\"" + p.id + "\" onclick=\"copiarWpp(parseInt(this.dataset.pid))\">\ud83d\udcac WPP</button>" +
+    "</div></div></div>";
+}
+
+function avancarStatus(id, ns) {
+  var p = getPed(id);
+  if (!p) return;
+  p.historico.push({data:Date.now(), acao:"Status: " + p.status + " \u2192 " + ns});
+  p.status = ns;
+  salvar();
+  renderPed();
+}
+
+function verPed(id) {
+  editPedId = id;
+  var p = getPed(id);
+  if (!p) return;
+  document.getElementById("mPedTitle").textContent = "Pedido #" + p.numero;
+  var stepNames = ["Aguardando pgto","Pago","A entregar","Entregue"];
+  var statusFlow = ["Aguardando pagamento","Pago","A entregar/retirar","Entregue"];
+  var curIdx = statusFlow.indexOf(p.status);
+  var stepsHtml = "<div class=\"steps\">";
+  for (var i = 0; i < stepNames.length; i++) {
+    var cls = "step" + (i < curIdx ? " done" : (i === curIdx ? " active" : ""));
+    stepsHtml += "<div class=\"" + cls + "\"><div class=\"step-dot\"></div><div class=\"step-lbl\">" + stepNames[i] + "</div></div>";
+  }
+  stepsHtml += "</div>";
+  var itHtml = "<table class=\"tbl\"><tr><th>Produto</th><th>Tam</th><th>Qtd</th><th>Valor</th></tr>";
+  for (var j = 0; j < p.itens.length; j++) {
+    var it = p.itens[j];
+    itHtml += "<tr><td>" + it.nome + "</td><td>" + it.tamanho + "</td><td>" + it.qtd + "</td><td>" + fmt(it.valor * it.qtd) + "</td></tr>";
+  }
+  itHtml += "</table>";
+  if (p.desconto > 0 || p.frete > 0) {
+    itHtml += "<div style=\"margin-top:8px;font-size:13px;color:var(--sub);border-top:1px solid #eee;padding-top:8px;\">";
+    if (p.subtotal) itHtml += "<div style=\"display:flex;justify-content:space-between;\"><span>Subtotal:</span><span>" + fmt(p.subtotal) + "</span></div>";
+    if (p.desconto > 0) itHtml += "<div style=\"display:flex;justify-content:space-between;color:#e74c3c;\"><span>Desconto:</span><span>- " + fmt(p.desconto) + "</span></div>";
+    if (p.frete > 0) itHtml += "<div style=\"display:flex;justify-content:space-between;color:#2980b9;\"><span>Frete cliente:</span><span>+ " + fmt(p.frete) + "</span></div>";
+    itHtml += "</div>";
+  }
+  var histHtml = "<div style=\"margin-top:12px;\"><strong>Histórico:</strong><ul style=\"list-style:none;margin-top:6px;\">";
+  for (var k = 0; k < p.historico.length; k++) {
+    histHtml += "<li style=\"font-size:12px;color:#777;padding:2px 0;\">" + fmtDate(p.historico[k].data) + " - " + p.historico[k].acao + "</li>";
+  }
+  histHtml += "</ul></div>";
+  var statusOpts = "";
+  for (var s = 0; s < STATUS_LIST.length; s++) statusOpts += "<option" + (p.status===STATUS_LIST[s]?" selected":"") + ">" + STATUS_LIST[s] + "</option>";
+  var html = stepsHtml +
+    "<div class=\"form-group\"><label class=\"lbl\">Status</label><select class=\"inp\" id=\"pedStatusSel\">" + statusOpts + "</select></div>" +
+    "<div class=\"row\"><div class=\"col form-group\"><label class=\"lbl\">Entrega</label><input class=\"inp\" id=\"pedEntrega\" value=\"" + (p.formaEntrega || "") + "\"></div>" +
+    "<div class=\"col form-group\"><label class=\"lbl\">Pagamento</label><input class=\"inp\" id=\"pedPgto\" value=\"" + (p.formaPagamento || "") + "\"></div></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">Observações/Endereço</label><textarea class=\"inp\" id=\"pedObs\" rows=\"2\">" + (p.obs || "") + "</textarea></div>" +
+    itHtml +
+    "<div style=\"text-align:right;font-size:18px;font-weight:800;margin-top:8px;\">Total: <span style=\"color:#27ae60;\">" + fmt(p.total) + "</span></div>" +
+    histHtml +
+    "<div style=\"display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;\">" +
+    "<button class=\"btn btn-success btn-sm\" onclick=\"salvarPed()\">Salvar</button>" +
+    "<button class=\"btn btn-am btn-sm\" data-pid=\"" + p.id + "\" onclick=\"copiarWpp(parseInt(this.dataset.pid))\">\ud83d\udcac WhatsApp</button>" +
+    "<button class=\"btn btn-ro btn-sm\" data-pid=\"" + p.id + "\" onclick=\"copiarDirect(parseInt(this.dataset.pid))\">\ud83d\udcf8 Direct</button>" +
+    "<button class=\"btn btn-danger btn-sm\" data-pid=\"" + p.id + "\" onclick=\"cancelarPed(parseInt(this.dataset.pid))\">Cancelar</button>" +
+    "<button class=\"btn btn-outline btn-sm\" data-pid=\"" + p.id + "\" onclick=\"excluirPed(parseInt(this.dataset.pid))\">Excluir</button>" +
+    "</div>";
+  document.getElementById("mPedBody").innerHTML = html;
+  abrirModal("m-ped");
+}
+
+function salvarPed() {
+  var p = getPed(editPedId);
+  if (!p) return;
+  var novoStatus = document.getElementById("pedStatusSel").value;
+  if (novoStatus !== p.status) {
+    p.historico.push({data:Date.now(), acao:"Status: " + p.status + " \u2192 " + novoStatus});
+    p.status = novoStatus;
+  }
+  p.formaEntrega = document.getElementById("pedEntrega").value;
+  p.formaPagamento = document.getElementById("pedPgto").value;
+  p.obs = document.getElementById("pedObs").value;
+  salvar();
+  fecharModal("m-ped");
+  renderPed();
+}
+
+function cancelarPed(id) {
+  if (!confirm("Cancelar este pedido?")) return;
+  var p = getPed(id);
+  p.historico.push({data:Date.now(), acao:"Pedido cancelado"});
+  p.status = "Cancelado";
+  salvar();
+  fecharModal("m-ped");
+  renderPed();
+}
+
+function excluirPed(id) {
+  if (!confirm("Excluir este pedido definitivamente?")) return;
+  db.pedidos = db.pedidos.filter(function(p){ return p.id !== id; });
+  salvar();
+  fecharModal("m-ped");
+  renderPed();
+}
+
+function textoWpp(p) {
+  var txt = "* UNIVERSO NYNA *\nPedido #" + p.numero + "\n\n";
+  txt += "Cliente: " + (p.nomeCliente || "-") + "\n";
+  txt += "Data: " + fmtDate(p.data) + "\n\nItens:\n";
+  for (var i = 0; i < p.itens.length; i++) {
+    var it = p.itens[i];
+    txt += (i+1) + ". " + it.nome + "\n   Tam: " + it.tamanho + " | Qtd: " + it.qtd + " | " + fmt(it.valor * it.qtd) + "\n";
+  }
+  if (p.subtotal && (p.desconto > 0 || p.frete > 0)) {
+    txt += "\nSubtotal: " + fmt(p.subtotal);
+    if (p.desconto > 0) txt += "\nDesconto: - " + fmt(p.desconto);
+    if (p.frete > 0) txt += "\nFrete: + " + fmt(p.frete);
+  }
+  txt += "\n\nTOTAL: " + fmt(p.total) + "\n";
+  txt += "Entrega: " + (p.formaEntrega || "-") + "\n";
+  txt += "Pagamento: " + (p.formaPagamento || "-") + "\n";
+  txt += "Obs: " + (p.obs || "-") + "\n\nObrigada pela prefer\u00eancia!";
+  return txt;
+}
+
+function copiarWpp(id) {
+  var p = getPed(id);
+  var txt = textoWpp(p);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(function(){ alert("Copiado! Cole no WhatsApp."); });
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+    alert("Copiado! Cole no WhatsApp.");
+  }
+}
+
+function copiarDirect(id) {
+  var p = getPed(id);
+  var txt = textoWpp(p);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(function(){ alert("Copiado! Cole no Direct."); });
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+    alert("Copiado! Cole no Direct.");
+  }
+}
+
+// ============ CLIENTES ============
+function renderCli() {
+  var busca = (document.getElementById("buscaCli") ? document.getElementById("buscaCli").value : "").toLowerCase();
+  var html = "";
+  for (var i = 0; i < db.clientes.length; i++) {
+    var c = db.clientes[i];
+    if (busca && c.nome.toLowerCase().indexOf(busca) < 0 && (!c.nomeCrianca || c.nomeCrianca.toLowerCase().indexOf(busca) < 0)) continue;
+    var peds = db.pedidos.filter(function(p){ return p.clienteId === c.id; });
+    var entregues = peds.filter(function(p){ return p.status === "Entregue"; });
+    var totalGasto = 0;
+    for (var j = 0; j < peds.length; j++) totalGasto += peds[j].total;
+    var ini = c.nome.charAt(0).toUpperCase();
+    html += "<div class=\"cli-card\">" +
+      "<div class=\"cli-avatar\" style=\"background:" + avatarColor(c.nome) + ";\">" + ini + "</div>" +
+      "<div style=\"flex:1;\">" +
+      "<div style=\"font-weight:700;\">" + c.nome + "</div>" +
+      (c.nomeCrianca ? "<div style=\"font-size:12px;\">\ud83d\udc76 " + c.nomeCrianca + "</div>" : "") +
+      (c.whatsapp ? "<div style=\"font-size:12px;color:#777;\">" + c.whatsapp + "</div>" : "") +
+      "<div style=\"font-size:11px;color:#777;margin-top:4px;\">" + peds.length + " pedido(s) | " + entregues.length + " entregue(s) | " + fmt(totalGasto) + "</div>" +
+      "<div style=\"display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;\">" +
+      "<button class=\"btn btn-outline btn-xs\" data-cid=\"" + c.id + "\" onclick=\"verCli(parseInt(this.dataset.cid))\">Histórico</button>" +
+      "<button class=\"btn btn-outline btn-xs\" data-cid=\"" + c.id + "\" onclick=\"abrirModalCli(parseInt(this.dataset.cid))\">Editar</button>" +
+      "<button class=\"btn btn-danger btn-xs\" data-cid=\"" + c.id + "\" onclick=\"excluirCli(parseInt(this.dataset.cid))\">\ud83d\uddd1️</button>" +
+      "</div></div></div>";
+  }
+  if (!html) html = "<div class=\"empty\"><div class=\"ei\">\ud83d\udc69</div><br>Nenhuma cliente</div>";
+  document.getElementById("cliGrid").innerHTML = html;
+}
+
+function abrirModalCli(id) {
+  editCliId = id;
+  var c = id ? getCli(id) : null;
+  document.getElementById("mCliTitle").textContent = id ? "Editar Cliente" : "Nova Cliente";
+  var html = "<div class=\"form-group\"><label class=\"lbl\">Nome da Cliente</label><input class=\"inp\" id=\"cNome\" value=\"" + (c ? c.nome : "") + "\"></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">Nome da Criança</label><input class=\"inp\" id=\"cCrianca\" value=\"" + (c ? c.nomeCrianca || "" : "") + "\"></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">WhatsApp</label><input class=\"inp\" id=\"cWpp\" value=\"" + (c ? c.whatsapp || "" : "") + "\"></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">Endereço</label><input class=\"inp\" id=\"cEnd\" value=\"" + (c ? c.endereco || "" : "") + "\"></div>" +
+    "<div class=\"form-group\"><label class=\"lbl\">Observações</label><textarea class=\"inp\" id=\"cObs\" rows=\"3\">" + (c ? c.obs || "" : "") + "</textarea></div>" +
+    "<button class=\"btn btn-success btn-full\" onclick=\"salvarCli()\">Salvar</button>";
+  document.getElementById("mCliForm").innerHTML = html;
+  abrirModal("m-cli");
+}
+
+function salvarCli() {
+  var nome = document.getElementById("cNome").value.trim();
+  if (!nome) { alert("Informe o nome!"); return; }
+  if (editCliId) {
+    var c = getCli(editCliId);
+    c.nome = nome;
+    c.nomeCrianca = document.getElementById("cCrianca").value;
+    c.whatsapp = document.getElementById("cWpp").value;
+    c.endereco = document.getElementById("cEnd").value;
+    c.obs = document.getElementById("cObs").value;
+  } else {
+    db.clientes.push({id:db.nextCliId++, nome:nome,
+      nomeCrianca:document.getElementById("cCrianca").value,
+      whatsapp:document.getElementById("cWpp").value,
+      endereco:document.getElementById("cEnd").value,
+      obs:document.getElementById("cObs").value});
+  }
+  salvar();
+  fecharModal("m-cli");
+  renderCli();
+}
+
+function excluirCli(id) {
+  if (!confirm("Excluir esta cliente?")) return;
+  db.clientes = db.clientes.filter(function(c){ return c.id !== id; });
+  salvar();
+  renderCli();
+}
+
+function verCli(id) {
+  var c = getCli(id);
+  if (!c) return;
+  document.getElementById("mCliDetTitle").textContent = c.nome;
+  var peds = db.pedidos.filter(function(p){ return p.clienteId === id; });
+  var html = "<div style=\"margin-bottom:12px;\">";
+  if (c.nomeCrianca) html += "<div>\ud83d\udc76 " + c.nomeCrianca + "</div>";
+  if (c.whatsapp) html += "<div>\ud83d\udcf1 " + c.whatsapp + "</div>";
+  if (c.endereco) html += "<div>\ud83d\udccd " + c.endereco + "</div>";
+  if (c.obs) html += "<div>\ud83d\udcdd " + c.obs + "</div>";
+  html += "</div><div class=\"sec-title\">Pedidos (" + peds.length + ")</div>";
+  for (var i = 0; i < peds.length; i++) {
+    var p = peds[i];
+    html += "<div class=\"card\" style=\"margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;\">" +
+      "<div><strong>#" + p.numero + "</strong> " + statusBadge(p.status) + "<br><small style=\"color:#777;\">" + fmtDate(p.data) + "</small></div>" +
+      "<strong style=\"color:#27ae60;\">" + fmt(p.total) + "</strong></div>";
+  }
+  if (peds.length === 0) html += "<div class=\"empty\">Nenhum pedido</div>";
+  document.getElementById("mCliDetBody").innerHTML = html;
+  abrirModal("m-cli-det");
+}
+
+// ============ COLECOES ============
+function renderCol() {
+  var catMap = {};
+  var totalModelos = 0, totalPecas = 0, totalCustoGlobal = 0, totalVendaGlobal = 0;
+  for (var i = 0; i < db.produtos.length; i++) {
+    var p = db.produtos[i];
+    var qt = totalTams(p);
+    totalModelos++;
+    totalPecas += qt;
+    totalCustoGlobal += qt * p.precoCusto;
+    totalVendaGlobal += qt * p.valorVenda;
+    if (!catMap[p.categoria]) catMap[p.categoria] = {modelos:0,pecas:0,custo:0,venda:0};
+    catMap[p.categoria].modelos++;
+    catMap[p.categoria].pecas += qt;
+    catMap[p.categoria].custo += qt * p.precoCusto;
+    catMap[p.categoria].venda += qt * p.valorVenda;
+  }
+  document.getElementById("colMetrics").innerHTML =
+    metricCard("\ud83d\udc57", totalModelos, "Modelos") +
+    metricCard("\ud83d\udce6", totalPecas, "Total Peças") +
+    metricCard("\ud83d\udcb0", fmt(totalCustoGlobal), "Custo Total") +
+    metricCard("\ud83c\udf1f", fmt(totalVendaGlobal - totalCustoGlobal), "Lucro Potencial");
+  var html = "";
+  var maxVenda = 0;
+  for (var cat in catMap) if (catMap[cat].venda > maxVenda) maxVenda = catMap[cat].venda;
+  for (var cat2 in catMap) {
+    var d = catMap[cat2];
+    var lucro = d.venda - d.custo;
+    var margem = d.venda > 0 ? Math.round(lucro / d.venda * 100) : 0;
+    var cor = CAT_COLORS[cat2] || "#999";
+    var pct = maxVenda > 0 ? Math.round(d.venda / maxVenda * 100) : 0;
+    html += "<div class=\"col-card\">" +
+      "<div style=\"display:flex;justify-content:space-between;margin-bottom:6px;\">" +
+      "<strong>" + cat2 + "</strong><span style=\"font-size:12px;color:#777;\">" + d.modelos + " modelos | " + d.pecas + " peças</span></div>" +
+      "<div class=\"progress-bar\" style=\"margin-bottom:10px;\"><div class=\"progress-fill\" style=\"width:" + pct + "%;background:" + cor + ";\"></div></div>" +
+      "<div style=\"display:flex;gap:12px;flex-wrap:wrap;font-size:12px;\">" +
+      "<span>Custo: <strong>" + fmt(d.custo) + "</strong></span>" +
+      "<span>Venda: <strong>" + fmt(d.venda) + "</strong></span>" +
+      "<span>Lucro: <strong style=\"color:#27ae60;\">" + fmt(lucro) + "</strong></span>" +
+      "<span>Margem: <strong>" + margem + "%</strong></span>" +
+      "</div></div>";
+  }
+  document.getElementById("colCards").innerHTML = html;
+}
+
+// ============ EXPORT/IMPORT ============
+function exportarDados() {
+  var d = {
+    produtos: db.produtos.map(function(p) { var c = {}; for (var k in p) { if (k !== "foto") c[k] = p[k]; } return c; }),
+    pedidos: db.pedidos, clientes: db.clientes, vendas: db.vendas,
+    nextPedId: db.nextPedId, nextCliId: db.nextCliId, nextVndId: db.nextVndId
+  };
+  var a = document.createElement("a");
+  a.href = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(d, null, 2));
+  a.download = "nyna_backup_" + new Date().toISOString().slice(0,10) + ".json";
+  a.click();
+}
+
+function importarDados(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var d = JSON.parse(ev.target.result);
+      db.produtos = d.produtos || db.produtos;
+      db.pedidos = d.pedidos || [];
+      db.clientes = d.clientes || [];
+      db.vendas = d.vendas || [];
+      db.nextPedId = d.nextPedId || 1;
+      db.nextCliId = d.nextCliId || 1;
+      db.nextVndId = d.nextVndId || 1;
+      salvar();
+      renderEst();
+      alert("Importado! " + db.produtos.length + " produtos.");
+    } catch(e) { alert("Erro ao importar: " + e.message); }
+  };
+  reader.readAsText(file);
+}
+
+// ============ FAB ============
+function fabClick() {
+  if (viewAtual === "est") abrirModalProd(0);
+  else if (viewAtual === "cli") abrirModalCli(0);
+}
+</script>
+</body>
+</html>
